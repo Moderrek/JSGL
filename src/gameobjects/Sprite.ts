@@ -23,6 +23,6 @@ export class Sprite extends GameObject{
         }
     }
 
-    public OnMouseClick(pos: Vector2, game: Game): boolean{ return false; /* not handled */ }
+    public OnMouseClick(game: Game): boolean{ return false; /* not handled */ }
 
 }

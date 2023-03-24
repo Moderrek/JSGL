@@ -2,10 +2,22 @@ import { Game } from '../Game';
 import { Sprite } from '../gameobjects/Sprite';
 import { Vector2 } from '../structs/Vector2';
 
+export interface DrawSettings {
+    color?: string|CanvasGradient|CanvasPattern;
+    borderColor?: string|CanvasGradient|CanvasPattern;
+    angle?: number;
+}
+
+const defaultDrawSettings: DrawSettings = {
+    color: '#000000',
+    borderColor: '#000000',
+    angle: 0
+};
+
 export class Drawer {
-    public handler: Game = undefined;
-    public gridSize: number = undefined;
-    public canvasParentSize: number = 1;
+    handler: Game = undefined;
+    gridSize: number = undefined;
+    canvasParentSize: number = 1;
 
     resizeCanvas(): void{
         if(!(this.handler.canvas instanceof HTMLCanvasElement))
@@ -31,121 +43,186 @@ export class Drawer {
         this.handler.canvas.width = width;
     }
 
-    public get canvasHeight(): number{
+    get canvasHeight(): number{
         return this.handler.canvas.height;
     }
-    public set canvasHeight(height: number){
+    set canvasHeight(height: number){
         this.handler.canvas.height = height;
     }
 
-    public get ctx(): CanvasRenderingContext2D{
+    get ctx(): CanvasRenderingContext2D{
         return this.handler.canvas.getContext('2d');
     }
 
-    public get canvasSize(): Vector2{
+    get canvasSize(): Vector2{
         return new Vector2(this.canvasWidth, this.canvasHeight);
     }
 
-    public scale(x: number): number{
+    scale(x: number): number{
         return x * this.gridSize;
     }
 
-    public drawRectangle(x: number, y: number, width: number, height: number, color: string|CanvasGradient|CanvasPattern = '#000000', angle: number = 0): void{
+    radians(degress: number): number{
+        degress %= 360;
+        return degress * Math.PI / 180;
+    }
+
+    degress(radians: number): number{
+        return radians / Math.PI * 180;
+    }
+
+    combineDrawSettings(drawSettings: DrawSettings): DrawSettings{
+        return { ...defaultDrawSettings, ...drawSettings };
+    }
+
+    setupDraw(drawSettings: DrawSettings){
+        this.ctx.fillStyle = drawSettings.color;
+        this.ctx.strokeStyle = drawSettings.borderColor;
+    }
+
+    drawRectangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+        drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
         const dw = this.scale(width);
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        this.ctx.rotate(angle * Math.PI / 180);
+        this.ctx.rotate(this.radians(drawSettings.angle));
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
-        this.ctx.fillStyle = color;
+        this.setupDraw(drawSettings);
         this.ctx.fillRect(dx, dy, dw, dh);
         this.ctx.restore();
     }
 
-    public strokeRectangle(x: number, y: number, width: number, height: number, color: string|CanvasGradient|CanvasPattern = '#000000', angle: number = 0): void{
+    strokeRectangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+        drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
         const dw = this.scale(width);
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        this.ctx.rotate(angle * Math.PI / 180);
+        this.ctx.rotate(this.radians(drawSettings.angle));
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
-        this.ctx.strokeStyle = color;
+        this.setupDraw(drawSettings);
         this.ctx.strokeRect(dx, dy, dw, dh);
         this.ctx.restore();
     }
 
-    public drawLine(x1: number, y1: number, x2: number, y2: number, color: string|CanvasGradient|CanvasPattern = '#000000'){
-        this.ctx.strokeStyle = color;
+    drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined){
+        drawSettings = this.combineDrawSettings(drawSettings);
+        this.ctx.lineWidth = this.gridSize/64;
+        this.setupDraw(drawSettings);
         this.ctx.beginPath();
         this.ctx.moveTo(this.scale(x1), this.scale(y1));
         this.ctx.lineTo(this.scale(x2), this.scale(y2));
         this.ctx.stroke();
     }
 
-    public clearFrame(): void{
+    drawArrow(x1: number, y1: number, x2: number, y2: number, size: number, drawSettings: DrawSettings = undefined) {
+        drawSettings = this.combineDrawSettings(drawSettings);
+        // Scaling
+        size *= this.gridSize / 16;
+        this.ctx.lineWidth = size * this.gridSize / 512;
+        this.setupDraw(drawSettings);
+        const p1 = new Vector2(x1 * this.gridSize, y1 * this.gridSize);
+        const p2 = new Vector2(x2 * this.gridSize, y2 * this.gridSize);
+        // Angle
+        var angle = Math.atan2((p2.y - p1.y) , (p2.x - p1.x));
+        var hyp = Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
+        // Rotate
+        this.ctx.save();
+        this.ctx.translate(p1.x, p1.y);
+        this.ctx.rotate(angle);
+        // Line
+        this.ctx.beginPath();	
+        this.ctx.moveTo(0, 0);
+        this.ctx.lineTo(hyp - size, 0);
+        this.ctx.stroke();
+        // Triangle
+        this.ctx.beginPath();
+        this.ctx.lineTo(hyp - size, size);
+        this.ctx.lineTo(hyp, 0);
+        this.ctx.lineTo(hyp - size, -size);
+        this.ctx.fill();
+
+        this.ctx.restore();
+      }
+
+    clearFrame(){
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    public fillFrame(color: string|CanvasGradient|CanvasPattern = '#000000'): void{
-        this.ctx.fillStyle = color;
+    fillFrame(drawSettings: DrawSettings = undefined){
+        drawSettings = this.combineDrawSettings(drawSettings);
+        this.setupDraw(drawSettings);
         this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    public fillImageFrame(image: HTMLCanvasElement): void{
+    fillImageFrame(image: HTMLCanvasElement){
         this.ctx.drawImage(image, 0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    public drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, angle: number = 0): void{
+    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+        drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
         const dw = this.scale(width);
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        this.ctx.rotate(angle * Math.PI / 180);
+        this.ctx.rotate(this.radians(drawSettings.angle));
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
         this.ctx.drawImage(image, dx, dy, dw, dh);
         this.ctx.restore();
     }
 
-    public drawSprite(sprite: Sprite): void{
+    drawSprite(sprite: Sprite){
         this.drawImage(
             sprite.texture,
             sprite.transform.position.x,
             sprite.transform.position.y,
             sprite.transform.scale.x,
             sprite.transform.scale.y,
-            sprite.transform.rotation
+            { angle: sprite.transform.rotation }
         );
     }
 
-    public drawSpriteHitbox(sprite: Sprite): void{
+    drawSpriteHitbox(sprite: Sprite){
+        const pos = sprite.transform.position;
+        const center = sprite.transform.positionCenter;
+        const scale = sprite.transform.scale;
         this.strokeRectangle(
-            sprite.transform.position.x,
-            sprite.transform.position.y,
-            sprite.transform.scale.x,
-            sprite.transform.scale.y,
-            'red',
-            0
+            pos.x,
+            pos.y,
+            scale.x,
+            scale.y,
+            { borderColor: 'red' }
         );
         this.drawLine(
-            sprite.transform.position.x,
-            sprite.transform.position.y,
-            sprite.transform.position.x + sprite.transform.scale.x,
-            sprite.transform.position.y + sprite.transform.scale.y,
-            'red',
+            pos.x,
+            pos.y,
+            pos.x + scale.x,
+            pos.y + scale.y,
+            { borderColor: 'red' }
         );
         this.drawLine(
-            sprite.transform.position.x + sprite.transform.scale.x,
-            sprite.transform.position.y,
-            sprite.transform.position.x,
-            sprite.transform.position.y + sprite.transform.scale.y,
-            'red',
+            pos.x + scale.x,
+            pos.y,
+            pos.x,
+            pos.y + scale.y,
+            { borderColor: 'red' }
         );
+        const angle = sprite.transform.getRadians();
+        this.drawArrow(
+            center.x,
+            center.y,
+            center.x + ((scale.x / 2 ) * Math.cos(angle)),
+            center.y + ((scale.y / 2 ) * Math.sin(angle)),
+            1,
+            { color: 'red', borderColor: 'red' }
+        )
     }
 
 }
