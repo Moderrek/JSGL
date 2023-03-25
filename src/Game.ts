@@ -13,18 +13,26 @@ import { OnDestroyEvent } from "./events/OnDestroyEvent";
 import { DrawEvent } from "./events/DrawEvent";
 import { TickEvent } from "./events/TickEvent";
 
+export enum ImageQuality {
+    High = 'high',
+    Medium = 'medium',
+    Low = 'low'
+}
+
 export interface GameSettings {
     canvas?: HTMLCanvasElement;
     grid?: Vector2;
     autoResize?: boolean;
     refreshWhenUnfocused?: boolean;
+    canvasImageQuality?: ImageQuality;
 }
 
-const defaultGameSettings: GameSettings = {
+export const defaultGameSettings: GameSettings = {
     canvas: undefined,
     grid: new Vector2(4, 3),
     autoResize: true,
-    refreshWhenUnfocused: true
+    refreshWhenUnfocused: true,
+    canvasImageQuality: ImageQuality.High
 };
 
 export class Game{
@@ -37,8 +45,9 @@ export class Game{
     // Constructor
     constructor(gameSettings: GameSettings){
         this.gameSettings = { ...defaultGameSettings, ...gameSettings };
-        this.canvas = gameSettings.canvas;
-        this.grid = gameSettings.grid;
+
+        this.canvas = this.gameSettings.canvas;
+        this.grid = this.gameSettings.grid;
         this.renderer.handler = this;
         this.registerCanvasEvents();
         if(this.gameSettings.autoResize){
@@ -47,6 +56,8 @@ export class Game{
                 this.Update();
             });
         }
+        this.renderer.ctx.imageSmoothingEnabled = true;
+        this.renderer.ctx.imageSmoothingQuality = this.gameSettings.canvasImageQuality;
     }
 
     // Canvas

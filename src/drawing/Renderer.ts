@@ -1,18 +1,8 @@
 import { Game } from '../Game';
+import { Clamp01 } from '../Utils';
 import { Sprite } from '../gameobjects/Sprite';
 import { Vector2 } from '../structs/Vector2';
-
-export interface DrawSettings {
-    color?: string|CanvasGradient|CanvasPattern;
-    borderColor?: string|CanvasGradient|CanvasPattern;
-    angle?: number;
-}
-
-const defaultDrawSettings: DrawSettings = {
-    color: '#000000',
-    borderColor: '#000000',
-    angle: 0
-};
+import { DrawSettings, defaultDrawSettings } from './DrawSettings';
 
 export class Renderer {
     handler: Game = undefined;
@@ -75,9 +65,15 @@ export class Renderer {
         return { ...defaultDrawSettings, ...drawSettings };
     }
 
-    setupDraw(drawSettings: DrawSettings){
+    setContextSettings(drawSettings: DrawSettings){
         this.ctx.fillStyle = drawSettings.color;
         this.ctx.strokeStyle = drawSettings.borderColor;
+        this.ctx.lineWidth = this.scale(drawSettings.borderSize/64);
+        this.ctx.globalAlpha = Clamp01(drawSettings.alpha);
+        this.ctx.shadowColor = drawSettings.shadow.color;
+        this.ctx.shadowOffsetX = this.scale(drawSettings.shadow.offsetX);
+        this.ctx.shadowOffsetY = this.scale(drawSettings.shadow.offsetY);
+        this.ctx.shadowBlur = this.scale(drawSettings.shadow.blur);
     }
 
     drawRectangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
@@ -90,33 +86,49 @@ export class Renderer {
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
         this.ctx.rotate(this.radians(drawSettings.angle));
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
-        this.setupDraw(drawSettings);
-        this.ctx.fillRect(dx, dy, dw, dh);
+        this.setContextSettings(drawSettings);
+        //
+        if(drawSettings.fill)
+            this.ctx.fillRect(dx, dy, dw, dh);
+        if(drawSettings.border)
+            this.ctx.strokeRect(dx, dy, dw, dh);
+        //
         this.ctx.restore();
     }
 
-    strokeRectangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+    drawCircle(x: number, y: number, diameter: number, drawSettings: DrawSettings = undefined){
+        drawSettings = this.combineDrawSettings(drawSettings);
+        const dx = this.scale(x);
+        const dy = this.scale(y);
+        const dr = this.scale(diameter / 2);
+        this.setContextSettings(drawSettings);
+        //
+        this.ctx.beginPath();
+        this.ctx.arc(dx + dr, dy + dr, dr, 0, 2 * Math.PI);
+        this.ctx.closePath();
+        if(drawSettings.fill)
+            this.ctx.fill();
+        if(drawSettings.border)
+            this.ctx.stroke();
+    }
+
+    drawTriangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
         const dw = this.scale(width);
         const dh = this.scale(height);
-        this.ctx.save();
-        this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        this.ctx.rotate(this.radians(drawSettings.angle));
-        this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
-        this.setupDraw(drawSettings);
-        this.ctx.strokeRect(dx, dy, dw, dh);
-        this.ctx.restore();
+        this.setContextSettings(drawSettings);
+        //
     }
 
     drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined){
         drawSettings = this.combineDrawSettings(drawSettings);
-        this.ctx.lineWidth = this.gridSize/64;
-        this.setupDraw(drawSettings);
+        this.setContextSettings(drawSettings);
         this.ctx.beginPath();
         this.ctx.moveTo(this.scale(x1), this.scale(y1));
         this.ctx.lineTo(this.scale(x2), this.scale(y2));
+        this.ctx.closePath();
         this.ctx.stroke();
     }
 
@@ -125,7 +137,7 @@ export class Renderer {
         // Scaling
         const size = this.gridSize / 16;
         this.ctx.lineWidth = this.gridSize / 64;
-        this.setupDraw(drawSettings);
+        this.setContextSettings(drawSettings);
         const p1 = new Vector2(x1 * this.gridSize, y1 * this.gridSize);
         const p2 = new Vector2(x2 * this.gridSize, y2 * this.gridSize);
         // Angle
@@ -139,14 +151,15 @@ export class Renderer {
         this.ctx.beginPath();	
         this.ctx.moveTo(0, 0);
         this.ctx.lineTo(hyp - size, 0);
+        this.ctx.closePath();
         this.ctx.stroke();
         // Triangle
         this.ctx.beginPath();
         this.ctx.lineTo(hyp - size, size);
         this.ctx.lineTo(hyp, 0);
         this.ctx.lineTo(hyp - size, -size);
+        this.ctx.closePath();
         this.ctx.fill();
-
         this.ctx.restore();
       }
 
@@ -156,7 +169,7 @@ export class Renderer {
 
     fillFrame(drawSettings: DrawSettings = undefined){
         drawSettings = this.combineDrawSettings(drawSettings);
-        this.setupDraw(drawSettings);
+        this.setContextSettings(drawSettings);
         this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
@@ -193,12 +206,12 @@ export class Renderer {
         const pos = sprite.transform.position;
         const center = sprite.transform.positionCenter;
         const scale = sprite.transform.scale;
-        this.strokeRectangle(
+        this.drawRectangle(
             pos.x,
             pos.y,
             scale.x,
             scale.y,
-            { borderColor: 'red' }
+            { borderColor: 'red', fill: false, border: true }
         );
         this.drawLine(
             pos.x,
@@ -223,5 +236,6 @@ export class Renderer {
             { color: 'red', borderColor: 'red' }
         )
     }
+    
 
 }

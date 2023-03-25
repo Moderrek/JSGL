@@ -11,6 +11,7 @@ Use the JSGL to create 2D games.
 * Resources loading system
 * Easy management objects with Transform and Vector2
 * No need to write HTML. The JSGL.ExampleHTML can render default game page.
+* Drawing text and UI (W.I.P)
 ## Example init
 ``index.html``
 ```html
