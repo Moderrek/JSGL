@@ -1,6 +1,6 @@
 {
   "name": "jsgl",
-  "version": "1.0.0",
+  "version": "1.0.0-pre2",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
   "main": "src/index.ts",
   "scripts": {

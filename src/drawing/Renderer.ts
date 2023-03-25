@@ -14,7 +14,7 @@ const defaultDrawSettings: DrawSettings = {
     angle: 0
 };
 
-export class Drawer {
+export class Renderer {
     handler: Game = undefined;
     gridSize: number = undefined;
     canvasParentSize: number = 1;

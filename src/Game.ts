@@ -3,7 +3,7 @@ import { Signals } from "./signals/Signals";
 import { GameEvent } from "./events/GameEvent";
 import { Resource } from "./structs/Resource";
 import { Callback } from "./signals/Callback";
-import { Drawer } from './drawing/Drawer';
+import { Renderer } from './drawing/Renderer';
 import { GameObject } from './gameobjects/GameObject';
 import { Sprite } from "./gameobjects/Sprite";
 import { IsInRange } from "./Utils";
@@ -30,7 +30,7 @@ const defaultGameSettings: GameSettings = {
 export class Game{
     // Properties
     readonly canvas: HTMLCanvasElement;
-    renderer: Drawer = new Drawer();
+    renderer: Renderer = new Renderer();
     readonly grid: Vector2;
     gameSettings: GameSettings = undefined;
 

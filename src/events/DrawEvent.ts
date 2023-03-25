@@ -1,7 +1,7 @@
 import { Game } from '../Game';
-import { Drawer } from '../drawing/Drawer';
+import { Renderer } from '../drawing/Renderer';
 
 export type DrawEvent = {
-    renderer: Drawer;
+    renderer: Renderer;
     game: Game;
 }

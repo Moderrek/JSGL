@@ -1,3 +1,4 @@
+// W.I.P -> 1.0.0-pre3
 import { TextSettings } from '../structs/TextSettings';
 import { GameObject } from './GameObject';
 export class TextGameObject extends GameObject{
