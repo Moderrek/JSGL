@@ -112,15 +112,22 @@ export class Renderer {
             this.ctx.stroke();
     }
 
-    drawTriangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
-        drawSettings = this.combineDrawSettings(drawSettings);
-        const dx = this.scale(x);
-        const dy = this.scale(y);
-        const dw = this.scale(width);
-        const dh = this.scale(height);
-        this.setContextSettings(drawSettings);
-        //
-    }
+    // drawTriangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+    //     drawSettings = this.combineDrawSettings(drawSettings);
+    //     const dx = this.scale(x);
+    //     const dy = this.scale(y);
+    //     const dw = this.scale(width);
+    //     const dh = this.scale(height);
+    //     this.ctx.save();
+    //     this.ctx.translate(dx + dw / 2, dy + dh / 2);
+    //     this.ctx.rotate(this.radians(drawSettings.angle));
+    //     this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
+    //     this.setContextSettings(drawSettings);
+    //     //
+
+    //     //
+    //     this.ctx.restore();
+    // }
 
     drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined){
         drawSettings = this.combineDrawSettings(drawSettings);
