@@ -380,6 +380,12 @@ export class Game{
         });
     }
     mouseClickHandler(game: Game, event: MouseEvent){
+        const gameMouseEvent = {
+            mousePos: game.mousePos,
+            mousePrecisePos: game.mousePrecisePos,
+            mouseClientPos: game.mouseClientPos,
+            isMouseDown: game.isMousePrimaryButtonDown
+        };
         for(let i = this.gameObjects.length - 1; i >= 0; i -= 1){
             const gameObject = this.gameObjects[i];
             if(!gameObject.enabled)
@@ -394,16 +400,11 @@ export class Game{
             const maxY = gameObject.transform.position.y + gameObject.transform.scale.y;
             const isInRange = IsInRange(game.mousePrecisePos.x, minX, maxX) && IsInRange(game.mousePrecisePos.y, minY, maxY);
             if(isInRange){
-                if((gameObject as Sprite).OnMouseClick(game)){
+                if((gameObject as Sprite).OnMouseClick(gameMouseEvent)){
                     break;
                 }
             }
         }
-        game.emit('mouseClick', {
-            mousePos: game.mousePos,
-            mousePrecisePos: game.mousePrecisePos,
-            mouseClientPos: game.mouseClientPos,
-            isMouseDown: game.isMousePrimaryButtonDown
-        });
+        game.emit('mouseClick', gameMouseEvent);
     }
 }

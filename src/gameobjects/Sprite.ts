@@ -1,23 +1,19 @@
-import { Drawer } from "../drawing/Drawer";
-import { Game } from "../Game";
 import { GameObject } from "./GameObject";
-import { Vector2 } from "../structs/Vector2";
 import { DrawEvent } from '../events/DrawEvent';
 import { OnStartEvent } from "../events/OnStartEvent";
-
-// const allowTextureTypes = [CSSImageValue, HTMLCanvasElement, HTMLImageElement, HTMLVideoElement, ImageBitmap, OffscreenCanvas, SVGImageElement, VideoFrame];
+import { GameMouseEvent } from "../events/GameMouseEvent";
 
 export class Sprite extends GameObject{
     
-    public visible: boolean = true;
-    public texture: HTMLImageElement = undefined;
-    public showHitbox: boolean = false;
+    visible: boolean = true;
+    texture: HTMLImageElement = undefined;
+    showHitbox: boolean = false;
 
-    public override OnStart(event: OnStartEvent): void {
+    override OnStart(event: OnStartEvent): void {
         event.game.Update();
     }
 
-    public override OnDraw(event: DrawEvent): void {
+    override OnDraw(event: DrawEvent): void {
         if(this.visible){
             event.renderer.drawSprite(this);
             if(this.showHitbox)
@@ -25,6 +21,6 @@ export class Sprite extends GameObject{
         }
     }
 
-    public OnMouseClick(game: Game): boolean{ return false; /* not handled */ }
+    OnMouseClick(event: GameMouseEvent): boolean{ return false; /* not handled */ }
 
 }
