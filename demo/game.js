@@ -10,7 +10,7 @@ let game = new JSGL.Game({
     canvas: document.getElementById("gameCanvas"),
     grid: new JSGL.Vector2(8, 6),
     autoResize: true,
-    refreshWhenUnfocused: true
+    refreshWhenUnfocused: false
 });
 // Add resource to load
 game.LoadResource('image', 'points', './resources/images/point.png');
@@ -24,20 +24,20 @@ game.RescaleCanvasToParentElement(0.95);
 class Enemy extends JSGL.Sprite{
     move = true;
 
-    OnStart(game){
-        this.texture = game.GetImage('points');
+    OnStart(event){
+        this.texture = event.game.GetImage('points');
         this.showHitbox = true;
     }
-    Update(deltaTime, game){
-        const rotationPerSec = 30;
+    Update(event){
+        const rotationPerSec = 180;
         const rotationPerMillis = rotationPerSec / 1000; 
-        this.transform.rotate(rotationPerMillis * deltaTime);
+        this.transform.rotate(rotationPerMillis * event.deltaTime);
         if(this.move)
-            this.transform.move(new JSGL.Vector2(1/1000 * deltaTime, 1/1000 * deltaTime));
-        game.Update();
+            this.transform.move(new JSGL.Vector2(1/1000 * event.deltaTime, 1/250 * event.deltaTime));
+        event.game.Update();
     }
-    OnMouseClick(game){
-        console.log("Clicked! @", this);
+    OnMouseClick(event){
+        console.log("Clicked! @", event);
         return true;
     }
 }
@@ -50,7 +50,7 @@ class Enemy extends JSGL.Sprite{
 console.log("Waiting for load..");
 game.LoadGameAndStart().then(() => {
     console.log("Loaded");
-    game.on('draw', () => {
+    game.on('draw', (event) => {
         game.renderer.fillFrame({ color: '#F0F0F0' });
         game.renderer.drawRectangle(0, 0, 1, 1);
         game.renderer.drawRectangle(2, 0, 1, 1, { color: 'blue' });

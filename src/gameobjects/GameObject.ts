@@ -21,10 +21,10 @@ export class GameObject {
         this.transform = new Transform(0, 0, 1, 1, 0);
     }
 
-    public OnStart(event: OnStartEvent){}
-    public OnDestroy(event: OnDestroyEvent){}
-    public Update(event: TickEvent){}
-    public OnDraw(event: DrawEvent){}
-    public FixedUpdate(event: TickEvent){}
+    OnStart(event: OnStartEvent){}
+    OnDestroy(event: OnDestroyEvent){}
+    Update(event: TickEvent){}
+    OnDraw(event: DrawEvent){}
+    FixedUpdate(event: TickEvent){}
 
 }
