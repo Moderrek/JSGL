@@ -28,18 +28,18 @@ export class Drawer {
         const maxWidth = parent.clientWidth;
         const maxHeight = parent.clientHeight;
 
-        let width = (maxWidth * this.canvasParentSize) / this.handler.grid.x;
-        let height = (maxHeight * this.canvasParentSize) / this.handler.grid.y;
+        const width = (maxWidth * this.canvasParentSize) / this.handler.grid.x;
+        const height = (maxHeight * this.canvasParentSize) / this.handler.grid.y;
 
         this.gridSize = Math.floor(Math.min(width, height));
         this.canvasWidth = this.handler.grid.x * this.gridSize;
         this.canvasHeight = this.handler.grid.y * this.gridSize;
     }
 
-    public get canvasWidth(): number{
+    get canvasWidth(): number{
         return this.handler.canvas.width;
     }
-    public set canvasWidth(width: number){
+    set canvasWidth(width: number){
         this.handler.canvas.width = width;
     }
 
@@ -120,17 +120,17 @@ export class Drawer {
         this.ctx.stroke();
     }
 
-    drawArrow(x1: number, y1: number, x2: number, y2: number, size: number, drawSettings: DrawSettings = undefined) {
+    drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined) {
         drawSettings = this.combineDrawSettings(drawSettings);
         // Scaling
-        size *= this.gridSize / 16;
-        this.ctx.lineWidth = size * this.gridSize / 512;
+        let size = this.gridSize / 16;
+        this.ctx.lineWidth = this.gridSize / 64;
         this.setupDraw(drawSettings);
         const p1 = new Vector2(x1 * this.gridSize, y1 * this.gridSize);
         const p2 = new Vector2(x2 * this.gridSize, y2 * this.gridSize);
         // Angle
-        var angle = Math.atan2((p2.y - p1.y) , (p2.x - p1.x));
-        var hyp = Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
+        const angle = Math.atan2((p2.y - p1.y) , (p2.x - p1.x));
+        const hyp = Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
         // Rotate
         this.ctx.save();
         this.ctx.translate(p1.x, p1.y);
@@ -220,7 +220,6 @@ export class Drawer {
             center.y,
             center.x + ((scale.x / 2 ) * Math.cos(angle)),
             center.y + ((scale.y / 2 ) * Math.sin(angle)),
-            1,
             { color: 'red', borderColor: 'red' }
         )
     }

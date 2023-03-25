@@ -148,11 +148,13 @@ export class Game{
 
     LoadGameAndStart(): Callback{
         let callback = new Callback();
-        this.on('loadAllResources', () => {
-            this.Start();
+        const game = this;
+        const whenLoaded = () => {
+            game.Start();
             callback.execThen();
-        });
-        this.LoadAllResources();
+        }
+        game.on('loadAllResources', whenLoaded);
+        game.LoadAllResources();
         return callback;
     }
 
@@ -180,7 +182,7 @@ export class Game{
         this.LoadAllResources();
     }
     CreateImage(path: string): HTMLImageElement{
-        let img = new Image();
+        const img = new Image();
         img.src = path;
         return img;
     }
@@ -196,12 +198,12 @@ export class Game{
         return res.object;
     }
     LoadAllResources(){
-        if(this.resources.size == 0){
-            if(!this._isLoadedAllResources){
-                this._signals.emit('loadAllResources', {});
-                this._isLoadedAllResources = true;
-                return;
-            }
+        console.log(this.resources.size);
+        if(this.resources.size === 0){
+            console.log("Loaded")
+            this._signals.emit('loadAllResources', {});
+            console.log("emitted");
+            this._isLoadedAllResources = true;
             return;
         }
         let resourcesCount = 0;
@@ -219,7 +221,7 @@ export class Game{
                 return;
             if(resource.type === 'image'){
                 // Loading image
-                let image = new Image();
+                const image = new Image();
                 image.src = resource.path;
                 image.addEventListener('error', () => {
                     resource.loaded = false;
@@ -262,7 +264,7 @@ export class Game{
     DestroyGameObjectByRef(gameObject: GameObject){
         if(!(gameObject instanceof GameObject))
             throw new Error("Param gameObject must be an GameObject object!");
-        let index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
+        const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
         this.gameObjects[index].OnDestroy(this);
         this.gameObjects.splice(index, 1);
         this.sortGameObjects();
@@ -270,8 +272,8 @@ export class Game{
     DestroyGameObjectById(id: string){
         if(typeof id !== "string")
             throw new Error("Param id must be string!");
-        let gameObject = this.GetGameObjectById(id);
-        let index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
+        const gameObject = this.GetGameObjectById(id);
+        const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
         this.gameObjects[index].OnDestroy(this);
         this.gameObjects.splice(index, 1);
         this.sortGameObjects();
@@ -290,7 +292,7 @@ export class Game{
     GetGameObjectsByType(type: object): Array<GameObject>{
         if(typeof type != 'function' || !(type instanceof Object))
             throw new Error("Type must be an object!");
-        let result = [];
+        const result = [];
         for (const gameObject of this.gameObjects) {
             if(gameObject instanceof type)
                 result.push(gameObject);
@@ -300,7 +302,7 @@ export class Game{
     GetGameObjectsByName(name: string): Array<GameObject>{
         if(typeof name != 'string')
             throw new Error("Name of object must be string!");
-        let result = [];
+        const result = [];
         for (const gameObject of this.gameObjects) {
             if(gameObject.name === name)
                 result.push(gameObject);
@@ -310,7 +312,7 @@ export class Game{
     GetGameObjectsByTag(tag: string): Array<GameObject>{
         if(typeof tag != 'string')
             throw new Error("Name of object must be string!");
-        let result = [];
+        const result = [];
         for (const gameObject of this.gameObjects) {
             if(gameObject.tag === tag)
                 result.push(gameObject);
@@ -329,8 +331,8 @@ export class Game{
 
     // Sounds Management
     PlaySound(path: string, loop: boolean = false, volume: number = 1){
-        let audio = new Audio();
-        let src = document.createElement("source");
+        const audio = new Audio();
+        const src = document.createElement("source");
         src.type = "audio/mpeg";
         src.src = path;
         audio.appendChild(src);
@@ -346,7 +348,7 @@ export class Game{
     isMousePrimaryButtonDown: boolean;
     mouseMoveHandler(game: Game, event: MouseEvent){
         game.mouseClientPos = new Vector2(event.offsetX, event.offsetY);
-        let gridPos = game.mouseClientPos.clone();
+        const gridPos = game.mouseClientPos.clone();
         const gridSize = game.renderer.gridSize;
         gridPos.divide(gridSize);
         game.mousePrecisePos = gridPos.clone();

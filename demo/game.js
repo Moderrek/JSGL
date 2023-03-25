@@ -29,11 +29,11 @@ class Enemy extends JSGL.Sprite{
         this.showHitbox = true;
     }
     Update(deltaTime, game){
-        const rotationPerSec = 180;
+        const rotationPerSec = 30;
         const rotationPerMillis = rotationPerSec / 1000; 
         this.transform.rotate(rotationPerMillis * deltaTime);
         if(this.move)
-            this.transform.move(new JSGL.Vector2(1/1000 * deltaTime, 1/250 * deltaTime));
+            this.transform.move(new JSGL.Vector2(1/1000 * deltaTime, 1/1000 * deltaTime));
         game.Update();
     }
     OnMouseClick(game){
@@ -47,6 +47,7 @@ class Enemy extends JSGL.Sprite{
 //     game.Start();
 // });
 // game.LoadAllResources();
+console.log("Waiting for load..");
 game.LoadGameAndStart().then(() => {
     console.log("Loaded");
     game.on('draw', () => {

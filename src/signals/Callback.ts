@@ -1,7 +1,7 @@
 export class Callback {
 
-    private fSuccess: Function;
-    private fError: Function;
+    fSuccess: Function;
+    fError: Function;
 
     public then(success: Function): Callback{
         if(!(success instanceof Function))
@@ -17,11 +17,11 @@ export class Callback {
         return this;
     }
 
-    public execThen(): void{
+    public execThen(){
         if(this.fSuccess instanceof Function)
             this.fSuccess();
     }
-    public execError(): void{
+    public execError(){
         if(this.fError instanceof Function)
             this.fError();
     }
