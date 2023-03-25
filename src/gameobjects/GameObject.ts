@@ -1,14 +1,16 @@
 import { Transform } from "../structs/Transform";
-import { Game } from '../Game';
-import { Drawer } from "../drawing/Drawer";
+import { OnStartEvent } from "../events/OnStartEvent";
+import { OnDestroyEvent } from "../events/OnDestroyEvent";
+import { TickEvent } from "../events/TickEvent";
+import { DrawEvent } from '../events/DrawEvent';
 
 export class GameObject {
-    public readonly id: string;
-    public enabled: boolean;
-    public name: string;
-    public tag: string;
-    public sortingOrder: number;
-    public transform: Transform;
+    readonly id: string;
+    enabled: boolean;
+    name: string;
+    tag: string;
+    sortingOrder: number;
+    transform: Transform;
 
     constructor(){
         this.id = crypto.getRandomValues(new Uint32Array(4)).join('-');
@@ -19,10 +21,10 @@ export class GameObject {
         this.transform = new Transform(0, 0, 1, 1, 0);
     }
 
-    public OnStart(game: Game): void{}
-    public OnDestroy(game: Game): void{}
-    public Update(deltaTime: number, game: Game): void{}
-    public OnDraw(renderer: Drawer, game: Game): void{}
-    public FixedUpdate(deltaTime: number, game: Game): void{}
+    OnStart(event: OnStartEvent){}
+    OnDestroy(event: OnDestroyEvent){}
+    Update(event: TickEvent){}
+    OnDraw(event: DrawEvent){}
+    FixedUpdate(event: TickEvent){}
 
 }

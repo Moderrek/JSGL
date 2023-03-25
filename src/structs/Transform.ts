@@ -11,29 +11,37 @@ export class Transform{
         this.rotation = rotation;
     }
 
-    public getRotation(): number{
+    get positionCenter(){
+        const x = this.position.x + ( this.scale.x / 2 );
+        const y = this.position.y + ( this.scale.y / 2);
+        return new Vector2(x, y);
+    }
+
+    getRotation(): number{
+        this.normalizeRotation();
         return this.rotation;
     }
 
-    public setRotation(value: number): void{
+    setRotation(value: number){
         this.rotation = value;
     }
-
-    public rotate(value: number): void{
+    rotate(value: number){
         this.rotation += value;
-    }
-    public normalizeRotation(): void{
-        this.rotation = this.rotation % 360;
-    }
-    public getRadians(): number{
         this.normalizeRotation();
-        return this.rotation * 0.01745;
+    }
+    normalizeRotation(){
+        if(this.rotation >= 360)
+            this.rotation = this.rotation % 360;
+    }
+    getRadians(): number{
+        this.normalizeRotation();
+        return this.rotation * Math.PI / 180;
     }
 
-    getScale(){
+    getScale(): Vector2{
         return this.scale;
     }
-    getScaleX(){
+    getScaleX(): number{
         return this.scale.x;
     }
     setScaleX(x: number){
@@ -58,6 +66,11 @@ export class Transform{
         this.position.x = x;
         return this;
     }
+    add(v: Vector2){
+        this.position.x += v.x;
+        this.position.y += v.y;
+        return this;
+    }
     addX(x: number){
         this.position.x += x;
         return this;
@@ -72,6 +85,15 @@ export class Transform{
     addY(y: number){
         this.position.y += y;
         return this;
+    }
+
+    move(v: Vector2){
+        this.position.x += v.x * Math.cos(this.getRadians());
+        this.position.y += v.y * Math.sin(this.getRadians());
+    }
+
+    clone(): Transform{
+        return new Transform(this.position.x, this.position.y, this.scale.x, this.scale.y, this.rotation);
     }
 
 }
