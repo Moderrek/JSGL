@@ -147,7 +147,7 @@ export class Game{
     }
 
     LoadGameAndStart(): Callback{
-        let callback = new Callback();
+        const callback = new Callback();
         const game = this;
         const whenLoaded = () => {
             game.Start();

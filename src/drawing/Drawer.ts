@@ -123,7 +123,7 @@ export class Drawer {
     drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined) {
         drawSettings = this.combineDrawSettings(drawSettings);
         // Scaling
-        let size = this.gridSize / 16;
+        const size = this.gridSize / 16;
         this.ctx.lineWidth = this.gridSize / 64;
         this.setupDraw(drawSettings);
         const p1 = new Vector2(x1 * this.gridSize, y1 * this.gridSize);

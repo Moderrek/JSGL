@@ -1,7 +1,7 @@
 export class Callback {
 
-    fSuccess: Function;
-    fError: Function;
+    fSuccess: () => void;
+    fError: () => void;
 
     public then(success: () => void): Callback{
         if(!(success instanceof Function))
