@@ -2,7 +2,7 @@ import { GameEvent } from "../events/GameEvent";
 
 export interface Listener {
     channel: string;
-    callback: Function;
+    callback: (event: GameEvent) => void;
 }
 
 export class Signals {
@@ -19,7 +19,7 @@ export class Signals {
                 listener.callback(event);
         }
     }
-    on(channel: string, callback: Function){
+    on(channel: string, callback: (event: GameEvent) => void){
         this.listeners.push({
             channel: channel,
             callback: callback

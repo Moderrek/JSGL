@@ -3,14 +3,14 @@ export class Callback {
     fSuccess: Function;
     fError: Function;
 
-    public then(success: Function): Callback{
+    public then(success: () => void): Callback{
         if(!(success instanceof Function))
             throw new Error("Param must be function!");
         this.fSuccess = success;
         return this;
     }
 
-    public error(error: Function): Callback{
+    public error(error: () => void): Callback{
         if(!(error instanceof Function))
             throw new Error("Param must be function!");
         this.fError = error;

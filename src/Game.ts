@@ -71,7 +71,7 @@ export class Game{
             if (!gameObject.enabled)
                 return;
             try{
-                gameObject.Update(this._deltaTime, this);
+                gameObject.Update({ deltaTime: this._deltaTime, game: this });
             }catch (e){
                 console.warn(`Problem with executing Update @ ${gameObject.constructor.name} [${gameObject.id}]`);
                 console.log(gameObject);
@@ -83,7 +83,7 @@ export class Game{
             if (!gameObject.enabled)
                 return;
             try{
-                gameObject.FixedUpdate(this._deltaTime, this);
+                gameObject.FixedUpdate({ deltaTime: this._deltaTime, game: this });
             }catch (e){
                 console.warn(`Problem with executing FixedUpdate @ ${gameObject.constructor.name} [${gameObject.id}]`);
                 console.warn(gameObject);
@@ -98,7 +98,7 @@ export class Game{
                 if (!gameObject.enabled)
                     return;
                 try{
-                    gameObject.OnDraw(this.renderer, this);
+                    gameObject.OnDraw({ renderer: this.renderer, game: this});
                 }catch (e){
                     console.warn(`Problem with executing draw @ ${gameObject.constructor.name} [${gameObject.id}]`);
                     console.warn(gameObject);
@@ -161,7 +161,7 @@ export class Game{
     // Signals
     readonly _signals: Signals = new Signals();
     emit = (channel: string, event: GameEvent) => this._signals.emit(channel, event);
-    on = (channel: string, callback: Function) => this._signals.on(channel, callback);
+    on = (channel: string, callback: (event: GameEvent) => void) => this._signals.on(channel, callback);
 
     // Resources
     resources: Map<string, Resource> = new Map();
@@ -258,14 +258,14 @@ export class Game{
             gameObject.name = gameObject.constructor.name;
         this.gameObjects.push(gameObject);
         this.sortGameObjects();
-        gameObject.OnStart(this);
+        gameObject.OnStart({ game: this });
         return gameObject;
     }
     DestroyGameObjectByRef(gameObject: GameObject){
         if(!(gameObject instanceof GameObject))
             throw new Error("Param gameObject must be an GameObject object!");
         const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
-        this.gameObjects[index].OnDestroy(this);
+        this.gameObjects[index].OnDestroy({ game: this });
         this.gameObjects.splice(index, 1);
         this.sortGameObjects();
     }
@@ -274,7 +274,7 @@ export class Game{
             throw new Error("Param id must be string!");
         const gameObject = this.GetGameObjectById(id);
         const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
-        this.gameObjects[index].OnDestroy(this);
+        this.gameObjects[index].OnDestroy({ game: this });
         this.gameObjects.splice(index, 1);
         this.sortGameObjects();
     }
@@ -285,7 +285,7 @@ export class Game{
             throw new Error("Index cannot be lower than 0!");
         if(index >= this.gameObjects.length)
             throw new Error("Index cannot be bigger than maximum index!");
-        this.gameObjects[index].OnDestroy(this);
+        this.gameObjects[index].OnDestroy({ game: this });
         this.gameObjects.splice(index, 1);
         this.sortGameObjects();
     }
