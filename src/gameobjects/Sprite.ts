@@ -17,7 +17,7 @@ export class Sprite extends GameObject{
         if(this.visible){
             event.renderer.drawSprite(this);
             if(this.showHitbox)
-                event.renderer.drawSpriteHitbox(this);
+                event.renderer.drawSpriteHitBox(this);
         }
     }
 

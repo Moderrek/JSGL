@@ -62,12 +62,12 @@ export class Renderer {
         return x * this.gridSize;
     }
 
-    radians(degress: number): number{
-        degress %= 360;
-        return degress * Math.PI / 180;
+    radians(degrees: number): number{
+        degrees %= 360;
+        return degrees * Math.PI / 180;
     }
 
-    degress(radians: number): number{
+    degrees(radians: number): number{
         return radians / Math.PI * 180;
     }
 
@@ -189,7 +189,7 @@ export class Renderer {
         );
     }
 
-    drawSpriteHitbox(sprite: Sprite){
+    drawSpriteHitBox(sprite: Sprite){
         const pos = sprite.transform.position;
         const center = sprite.transform.positionCenter;
         const scale = sprite.transform.scale;

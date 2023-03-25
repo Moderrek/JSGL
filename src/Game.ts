@@ -64,14 +64,14 @@ export class Game{
 
     // Game Loop Management
     _isPlaying: boolean = false;
-    _currentMilis: number = 0;
+    _currentMillis: number = 0;
     _deltaTime: number = 0;
     isNeedToUpdate: boolean = true;
     
     gameLoopUpdate(time: number){
         // Calculation deltaTime
-        this._deltaTime = time - this._currentMilis;
-        this._currentMilis = time;
+        this._deltaTime = time - this._currentMillis;
+        this._currentMillis = time;
         // Update
         const tickEvent: TickEvent = {
             deltaTime: this._deltaTime,
