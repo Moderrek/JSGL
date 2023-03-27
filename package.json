@@ -2,7 +2,7 @@
   "name": "jsgl",
   "version": "1.0.0-pre2",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
-  "main": "src/index.ts",
+  "main": "dist/JSGL.js",
   "scripts": {
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
@@ -11,17 +11,22 @@
   },
   "keywords": [
     "game-development",
-    "javascript-library",
+    "javascript",
     "javascript-game",
     "2d-game",
     "game-objects",
     "graphics",
     "canvas",
     "html",
-    "animation"
+    "animation",
+    "library"
   ],
   "author": "Tymon Woźniak",
-  "license": "LGPL-2.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Moderrek/JSGL.git"
+  },
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
