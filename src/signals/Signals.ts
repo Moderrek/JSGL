@@ -13,7 +13,7 @@ export class Signals {
         this.listeners = [];
     }
 
-    emit(channel: string, event: GameEvent = {}){
+    emit(channel: string, event: GameEvent){
         for(const listener of this.listeners){
             if(channel === listener.channel)
                 listener.callback(event);

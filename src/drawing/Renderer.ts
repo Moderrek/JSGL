@@ -4,10 +4,21 @@ import { Sprite } from '../gameobjects/Sprite';
 import { Vector2 } from '../structs/Vector2';
 import { DrawSettings, defaultDrawSettings } from './DrawSettings';
 
+/**
+ * 
+ */
 export class Renderer {
-    handler: Game = undefined;
-    gridSize: number = undefined;
+    private readonly handler: Game;
+    gridSize: number = 0;
     canvasParentSize: number = 1;
+
+    /**
+     * Constructs new Renderer
+     * @param handler The {@link Game} reference
+     */
+    constructor(handler: Game){
+        this.handler = handler;
+    }
 
     resizeCanvas(): void{
         if(!(this.handler.canvas instanceof HTMLCanvasElement))
@@ -15,6 +26,8 @@ export class Renderer {
         
         const canvas = this.handler.canvas;
         const parent = canvas.parentElement;
+        if(parent == null)
+            throw new Error("Parent cannot be null!");
         const maxWidth = parent.clientWidth;
         const maxHeight = parent.clientHeight;
 
@@ -41,7 +54,10 @@ export class Renderer {
     }
 
     get ctx(): CanvasRenderingContext2D{
-        return this.handler.canvas.getContext('2d');
+        const context = this.handler.canvas.getContext('2d');
+        if(context == null)
+            throw new Error("There was a problem during getting the context");
+        return context;
     }
 
     get canvasSize(): Vector2{
@@ -61,22 +77,30 @@ export class Renderer {
         return radians / Math.PI * 180;
     }
 
-    combineDrawSettings(drawSettings: DrawSettings): DrawSettings{
+    combineDrawSettings(drawSettings: DrawSettings | undefined): DrawSettings{
         return { ...defaultDrawSettings, ...drawSettings };
     }
 
     setContextSettings(drawSettings: DrawSettings){
-        this.ctx.fillStyle = drawSettings.color;
-        this.ctx.strokeStyle = drawSettings.borderColor;
-        this.ctx.lineWidth = this.scale(drawSettings.borderSize/64);
-        this.ctx.globalAlpha = Clamp01(drawSettings.alpha);
-        this.ctx.shadowColor = drawSettings.shadow.color;
-        this.ctx.shadowOffsetX = this.scale(drawSettings.shadow.offsetX);
-        this.ctx.shadowOffsetY = this.scale(drawSettings.shadow.offsetY);
-        this.ctx.shadowBlur = this.scale(drawSettings.shadow.blur);
+        if(drawSettings.color !== undefined)
+            this.ctx.fillStyle = drawSettings.color;
+        if(drawSettings.borderColor !== undefined)
+            this.ctx.strokeStyle = drawSettings.borderColor;
+        if(drawSettings.borderSize !== undefined)
+            this.ctx.lineWidth = this.scale(drawSettings.borderSize/64);
+        if(drawSettings.alpha !== undefined)
+            this.ctx.globalAlpha = Clamp01(drawSettings.alpha);
+        if(drawSettings.shadow?.color !== undefined)
+            this.ctx.shadowColor = drawSettings.shadow.color;
+        if(drawSettings.shadow?.offsetX !== undefined)
+            this.ctx.shadowOffsetX = this.scale(drawSettings.shadow.offsetX);
+        if(drawSettings.shadow?.offsetY !== undefined)
+            this.ctx.shadowOffsetY = this.scale(drawSettings.shadow.offsetY);
+        if(drawSettings.shadow?.blur !== undefined)
+            this.ctx.shadowBlur = this.scale(drawSettings.shadow.blur);
     }
 
-    drawRectangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+    drawRectangle(x: number, y: number, width: number, height: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
@@ -84,7 +108,8 @@ export class Renderer {
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        this.ctx.rotate(this.radians(drawSettings.angle));
+        if(drawSettings.angle !== undefined)
+            this.ctx.rotate(this.radians(drawSettings.angle));
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
         this.setContextSettings(drawSettings);
         //
@@ -96,7 +121,7 @@ export class Renderer {
         this.ctx.restore();
     }
 
-    drawCircle(x: number, y: number, diameter: number, drawSettings: DrawSettings = undefined){
+    drawCircle(x: number, y: number, diameter: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
@@ -129,7 +154,7 @@ export class Renderer {
     //     this.ctx.restore();
     // }
 
-    drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined){
+    drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         this.setContextSettings(drawSettings);
         this.ctx.beginPath();
@@ -139,7 +164,7 @@ export class Renderer {
         this.ctx.stroke();
     }
 
-    drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings = undefined) {
+    drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings) {
         drawSettings = this.combineDrawSettings(drawSettings);
         // Scaling
         const size = this.gridSize / 16;
@@ -174,7 +199,7 @@ export class Renderer {
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    fillFrame(drawSettings: DrawSettings = undefined){
+    fillFrame(drawSettings: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         this.setContextSettings(drawSettings);
         this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -184,7 +209,7 @@ export class Renderer {
         this.ctx.drawImage(image, 0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
+    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, drawSettings: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
@@ -192,13 +217,18 @@ export class Renderer {
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        this.ctx.rotate(this.radians(drawSettings.angle));
+        if(drawSettings.angle !== undefined)
+            this.ctx.rotate(this.radians(drawSettings.angle));
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
         this.ctx.drawImage(image, dx, dy, dw, dh);
         this.ctx.restore();
     }
 
     drawSprite(sprite: Sprite){
+        if(sprite.texture === undefined){
+            console.warn("The Sprite ", sprite, " has not assigned texture!");
+            return;
+        }
         this.drawImage(
             sprite.texture,
             sprite.transform.position.x,

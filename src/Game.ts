@@ -9,16 +9,22 @@ import { Sprite } from "./gameobjects/Sprite";
 import { IsInRange } from "./Utils";
 import { GameMouseEvent } from './events/GameMouseEvent';
 import { GameObjectSpawnEvent } from "./events/GameObjectSpawnEvent";
-import { OnDestroyEvent } from "./events/OnDestroyEvent";
+import { GameObjectDestroyEvent } from "./events/GameObjectDestroyEvent";
 import { DrawEvent } from "./events/DrawEvent";
 import { TickEvent } from "./events/TickEvent";
 
+/**
+ * Represents canvas scaling image quality.
+ */
 export enum ImageQuality {
     High = 'high',
     Medium = 'medium',
     Low = 'low'
 }
 
+/**
+ * The {@link Game} settings.
+ */
 export interface GameSettings {
     canvas?: HTMLCanvasElement;
     grid?: Vector2;
@@ -27,6 +33,9 @@ export interface GameSettings {
     canvasImageQuality?: ImageQuality;
 }
 
+/**
+ * The {@link Game} default settings.
+ */
 export const defaultGameSettings: GameSettings = {
     canvas: undefined,
     grid: new Vector2(4, 3),
@@ -38,17 +47,23 @@ export const defaultGameSettings: GameSettings = {
 export class Game{
     // Properties
     readonly canvas: HTMLCanvasElement;
-    renderer: Renderer = new Renderer();
+    readonly renderer: Renderer = new Renderer(this);
     readonly grid: Vector2;
-    gameSettings: GameSettings = undefined;
+    readonly gameSettings: GameSettings;
 
     // Constructor
     constructor(gameSettings: GameSettings){
         this.gameSettings = { ...defaultGameSettings, ...gameSettings };
-
-        this.canvas = this.gameSettings.canvas;
-        this.grid = this.gameSettings.grid;
-        this.renderer.handler = this;
+        if(this.gameSettings.canvas !== undefined){
+            this.canvas = this.gameSettings.canvas;
+        }else{
+            throw new Error("Cannot asign canvas.");
+        }
+        if(this.gameSettings.grid !== undefined){
+            this.grid = this.gameSettings.grid;
+        }else{
+            throw new Error("Cannot asign grid.");
+        }
         this.registerCanvasEvents();
         if(this.gameSettings.autoResize){
             window.addEventListener('resize', () => {
@@ -57,16 +72,22 @@ export class Game{
             });
         }
         this.renderer.ctx.imageSmoothingEnabled = true;
-        this.renderer.ctx.imageSmoothingQuality = this.gameSettings.canvasImageQuality;
+        if(this.gameSettings.canvasImageQuality !== undefined)
+            this.renderer.ctx.imageSmoothingQuality = this.gameSettings.canvasImageQuality;
     }
 
     // Canvas
+    /**
+     * Scaling canvas size on page to percentage of parent element.
+     * @param percentage The decimal midpoint
+     * @returns The final canvas size
+     */
     RescaleCanvasToParentElement(percentage: number): Vector2{
         this.renderer.canvasParentSize = percentage;
         this.renderer.resizeCanvas();
         return this.renderer.canvasSize;
     }
-    registerCanvasEvents(){
+    private registerCanvasEvents(){
         this.canvas.addEventListener('mousemove', (event) => {this.mouseMoveHandler(this, event)});
         document.addEventListener('mouseup', (event) => {this.mouseUpHandler(this, event)});
         document.addEventListener('mousedown', (event) => {this.mouseDownHandler(this, event)});
@@ -74,18 +95,18 @@ export class Game{
     }
 
     // Game Loop Management
-    _isPlaying: boolean = false;
-    _currentMillis: number = 0;
-    _deltaTime: number = 0;
+    private _isPlaying: boolean = false;
+    private _currentMillis: number = 0;
+    private _deltaTime: number = 0;
     isNeedToUpdate: boolean = true;
     
-    gameLoopUpdate(time: number){
+    private gameLoopUpdate(time: number){
         // Calculation deltaTime
         this._deltaTime = time - this._currentMillis;
         this._currentMillis = time;
         // Update
         const tickEvent: TickEvent = {
-            deltaTime: this._deltaTime,
+            deltaTime: (this._deltaTime/1000),
             game: this
         }
         for (const gameObject of this.gameObjects) {
@@ -93,7 +114,7 @@ export class Game{
                 return;
             try{
                 gameObject.Update(tickEvent);
-            }catch (e){
+            }catch (e: any){
                 console.warn(`Problem with executing Update @ ${gameObject.constructor.name} [${gameObject.id}]`);
                 console.log(gameObject);
                 console.error(e.stack);
@@ -105,7 +126,7 @@ export class Game{
                 return;
             try{
                 gameObject.FixedUpdate(tickEvent);
-            }catch (e){
+            }catch (e: any){
                 console.warn(`Problem with executing FixedUpdate @ ${gameObject.constructor.name} [${gameObject.id}]`);
                 console.warn(gameObject);
                 console.error(e.stack);
@@ -113,7 +134,7 @@ export class Game{
         }
     }
 
-    gameLoopDraw(){
+    private gameLoopDraw(){
         // Draw
         if (this.isNeedToUpdate) {
             this.renderer.clearFrame();
@@ -127,7 +148,7 @@ export class Game{
                     return;
                 try{
                     gameObject.OnDraw(drawEvent);
-                }catch (e){
+                }catch (e: any){
                     console.warn(`Problem with executing draw @ ${gameObject.constructor.name} [${gameObject.id}]`);
                     console.warn(gameObject);
                     console.error(e.stack);
@@ -138,7 +159,7 @@ export class Game{
         }
     }
 
-    readonly gameLoop = (time: number) => { 
+    private readonly gameLoop = (time: number) => { 
         this.gameLoopUpdate(time);
         if(!document.hasFocus() && !this.gameSettings.refreshWhenUnfocused){
             if (this._isPlaying)
@@ -151,11 +172,18 @@ export class Game{
                 window.requestAnimationFrame(this.gameLoop);
     };
 
+    /**
+     * Tells the game it needs to be redrawn.
+     * Call it when some visible objects has been changed.
+     */
     Update(){
         this.isNeedToUpdate = true;
     }
 
-    startGameLoop(){
+    /**
+     * Starts new game loop
+     */
+    StartGameLoop(){
         if(this._isPlaying) {
             console.warn("Cannot start new game loop when the game loop exists.")
             return;
@@ -165,16 +193,26 @@ export class Game{
             this._isPlaying = true;
         });
     }
-    stopGameLoop(){
+    /**
+     * WARNING! Stops the game loop
+     */
+    StopGameLoop(){
         console.warn("Stopped the game loop! Restarting the game loop will cause a time skip.");
         this._isPlaying = false;
     }
 
+    /**
+     * Starts the game loop and emit `start` ({@link GameEvent}) event.
+     */
     Start(){
-        this.startGameLoop();
-        this.emit('start', {});
+        this.StartGameLoop();
+        this.emit('start', { game: this });
     }
 
+    /**
+     * Starts loading game resources and returns response as event.
+     * @returns The callback
+     */
     LoadGameAndStart(): Callback{
         const callback = new Callback();
         const game = this;
@@ -188,15 +226,26 @@ export class Game{
     }
 
     // Signals
-    readonly _signals: Signals = new Signals();
+    private readonly _signals: Signals = new Signals();
     emit = (channel: string, event: GameEvent) => this._signals.emit(channel, event);
+    /**
+     * Appends listener to event system.
+     * @param channel The listener signal channel.
+     * @param callback Executed function after receiving a signal on given channel.
+     */
     on = (channel: string, callback: (event: GameEvent) => void) => this._signals.on(channel, callback);
 
     // Resources
     resources: Map<string, Resource> = new Map();
-    _isLoadedAllResources: boolean = false;
+    private _isLoadedAllResources: boolean = false;
     
-    LoadResource(type: string, uid: string, path: string){
+    /**
+     * Loads resource with resource manager.
+     * @param type The resource type
+     * @param uid The resource unique key
+     * @param path The resource path
+     */
+    LoadResource(type: 'image', uid: string, path: string){
         if(type === 'image'){
             this.resources.set(uid, {
                 uid: uid,
@@ -210,15 +259,33 @@ export class Game{
         }
         this.LoadAllResources();
     }
+    /**
+     * Creates {@link HTMLImageElement} from path.
+     * @param path The image path
+     * @returns The image element
+     */
     CreateImage(path: string): HTMLImageElement{
         const img = new Image();
         img.src = path;
         return img;
     }
+    /**
+     * Gets the resource by unique resource key.
+     * @param uid The unique resource key.
+     * @returns The resource
+     */
     GetResource(uid: string): Resource{
-        return this.resources.get(uid);
+        const res = this.resources.get(uid);
+        if(res === undefined)
+            throw new Error("Resource not loaded!");
+        return res;
     }
-    GetImage(uid: string): object{
+    /**
+     * Gets the image resource by unique resource key.
+     * @param uid The unique resource key.
+     * @returns The image
+     */
+    GetImage(uid: string): object | undefined{
         const res = this.GetResource(uid);
         if(res.type !== 'image')
             return undefined;
@@ -226,6 +293,9 @@ export class Game{
             return undefined;
         return res.object;
     }
+    /**
+     * Starts loading all resources which is not loaded. Emits {@link GameEvent} at `loadAllResources` channel.
+     */
     LoadAllResources(){
         if(this.resources.size === 0){
             this._signals.emit('loadAllResources', { game: this });
@@ -269,10 +339,18 @@ export class Game{
     }
 
     // GameObjects
-    gameObjects: Array<GameObject> = [];
+    readonly gameObjects: Array<GameObject> = [];
+    /**
+     * Sorts all game objects by sorting order property.
+     */
     SortGameObjects(){
         this.gameObjects.sort((a, b) => (a.sortingOrder > b.sortingOrder) ? 1 : ((b.sortingOrder > a.sortingOrder) ? -1 : 0));
     }
+    /**
+     * Adds unique game object to game.
+     * @param gameObject The unique game object
+     * @returns The added game object
+     */
     AddGameObject(gameObject: GameObject): GameObject{
         if(!(gameObject instanceof GameObject))
             throw new Error("Cannot add not GameObject!");
@@ -292,29 +370,43 @@ export class Game{
         this.emit('spawnedGameObject', gameObjectSpawnEvent);
         return gameObject;
     }
+    /**
+     * Destroys existed game object by reference
+     * @param gameObject The game object reference
+     */
     DestroyGameObjectByRef(gameObject: GameObject){
         if(!(gameObject instanceof GameObject))
             throw new Error("Param gameObject must be an GameObject object!");
         const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
-        const onDestroyEvent: OnDestroyEvent = {
+        const onDestroyEvent: GameObjectDestroyEvent = {
             game: this
         }
         this.gameObjects[index].OnDestroy(onDestroyEvent);
         this.gameObjects.splice(index, 1);
         this.SortGameObjects();
     }
+    /**
+     * Destroys existed game object by unique id
+     * @param id The unique id
+     */
     DestroyGameObjectById(id: string){
         if(typeof id !== "string")
             throw new Error("Param id must be string!");
         const gameObject = this.GetGameObjectById(id);
+        if(gameObject === undefined)
+            return;
         const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
-        const onDestroyEvent: OnDestroyEvent = {
+        const onDestroyEvent: GameObjectDestroyEvent = {
             game: this
         }
         this.gameObjects[index].OnDestroy(onDestroyEvent);
         this.gameObjects.splice(index, 1);
         this.SortGameObjects();
     }
+    /**
+     * Destroys existed game object by index in game objects array
+     * @param index The index
+     */
     DestroyGameObjectByIndex(index: number){
         if(typeof index !== "number")
             throw new Error("Param index must be number!");
@@ -322,13 +414,18 @@ export class Game{
             throw new Error("Index cannot be lower than 0!");
         if(index >= this.gameObjects.length)
             throw new Error("Index cannot be bigger than maximum index!");
-        const onDestroyEvent: OnDestroyEvent = {
+        const onDestroyEvent: GameObjectDestroyEvent = {
             game: this
         }
         this.gameObjects[index].OnDestroy(onDestroyEvent);
         this.gameObjects.splice(index, 1);
         this.SortGameObjects();
     }
+    /**
+     * Gets all existed game objects with type equal to param.
+     * @param type The type
+     * @returns Array of selected game objects
+     */
     GetGameObjectsByType(type: object): Array<GameObject>{
         if(typeof type != 'function' || !(type instanceof Object))
             throw new Error("Type must be an object!");
@@ -339,6 +436,11 @@ export class Game{
         }
         return result;
     }
+    /**
+     * Gets all existed game objects by given name.
+     * @param name The name.
+     * @returns Array of game objects with given name.
+     */
     GetGameObjectsByName(name: string): Array<GameObject>{
         if(typeof name != 'string')
             throw new Error("Name of object must be string!");
@@ -349,6 +451,11 @@ export class Game{
         }
         return result;
     }
+    /**
+     * Gets all existed game objects by given tag.
+     * @param tag The tag.
+     * @returns The array of game objects with given tag.
+     */
     GetGameObjectsByTag(tag: string): Array<GameObject>{
         if(typeof tag != 'string')
             throw new Error("Name of object must be string!");
@@ -359,7 +466,12 @@ export class Game{
         }
         return result;
     }
-    GetGameObjectById(id: string): GameObject{
+    /**
+     * Gets game object by unique id.
+     * @param id The unique id
+     * @returns The game object
+     */
+    GetGameObjectById(id: string): GameObject | undefined{
         if(typeof id !== "string")
             throw new Error("Param id must be a string!");
         for(const gameObject of this.gameObjects){
@@ -370,6 +482,12 @@ export class Game{
     }
 
     // Sounds Management
+    /**
+     * Plays sound at the page
+     * @param path The path to sound file
+     * @param loop is looped?
+     * @param volume The volume decimal midpoint
+     */
     PlaySound(path: string, loop: boolean = false, volume: number = 1){
         const audio = new Audio();
         const src = document.createElement("source");
@@ -382,11 +500,11 @@ export class Game{
     }
 
     // Mouse Management
-    mousePos: Vector2;
-    mousePrecisePos: Vector2;
-    mouseClientPos: Vector2;
-    isMousePrimaryButtonDown: boolean;
-    mouseMoveHandler(game: Game, event: MouseEvent){
+    mousePos: Vector2 = new Vector2();
+    mousePrecisePos: Vector2 = new Vector2();
+    mouseClientPos: Vector2 = new Vector2();
+    isMousePrimaryButtonDown: boolean = false;
+    private mouseMoveHandler(game: Game, event: MouseEvent){
         game.mouseClientPos = new Vector2(event.offsetX, event.offsetY);
         const gridPos = game.mouseClientPos.clone();
         const gridSize = game.renderer.gridSize;
@@ -395,6 +513,7 @@ export class Game{
         gridPos.floor();
         game.mousePos = gridPos;
         const gameMouseEvent: GameMouseEvent = {
+            game: this,
             mousePos: game.mousePos,
             mousePrecisePos: game.mousePrecisePos,
             mouseClientPos: game.mouseClientPos,
@@ -402,9 +521,10 @@ export class Game{
         }
         game.emit('mouseMove', gameMouseEvent);
     }
-    mouseDownHandler(game: Game, event: MouseEvent){
+    private mouseDownHandler(game: Game, event: MouseEvent){
         game.isMousePrimaryButtonDown = true;
         const gameMouseEvent: GameMouseEvent = {
+            game: this,
             mousePos: game.mousePos,
             mousePrecisePos: game.mousePrecisePos,
             mouseClientPos: game.mouseClientPos,
@@ -412,9 +532,10 @@ export class Game{
         }
         game.emit('mouseDown', gameMouseEvent);
     }
-    mouseUpHandler(game: Game, event: MouseEvent){
+    private mouseUpHandler(game: Game, event: MouseEvent){
         game.isMousePrimaryButtonDown = false;
         const gameMouseEvent: GameMouseEvent = {
+            game: this,
             mousePos: game.mousePos,
             mousePrecisePos: game.mousePrecisePos,
             mouseClientPos: game.mouseClientPos,
@@ -422,8 +543,9 @@ export class Game{
         }
         game.emit('mouseUp', gameMouseEvent);
     }
-    mouseClickHandler(game: Game, event: MouseEvent){
+    private mouseClickHandler(game: Game, event: MouseEvent){
         const gameMouseEvent: GameMouseEvent = {
+            game: this,
             mousePos: game.mousePos,
             mousePrecisePos: game.mousePrecisePos,
             mouseClientPos: game.mouseClientPos,

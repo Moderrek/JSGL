@@ -62,9 +62,9 @@ game.LoadGameAndStart().then(() => {
                 blur: 0.4
             }
         });
-        game.renderer.drawTriangle(2, 0, 1, 1, {
-            color: 'blue'
-        });
+        // game.renderer.drawTriangle(2, 0, 1, 1, {
+        //     color: 'blue'
+        // });
         //
         game.renderer.drawRectangle(4.9, 0, 1.2, 3.1, {
             alpha: 0.2
