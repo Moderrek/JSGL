@@ -30,6 +30,31 @@ Use the JSGL to create 2D games.
 ```
 npm i @moderrkowo/jsgl
 ```
+## Including JSGL
+### Browser
+To include JSGL in browser add script tag to body element. Like below.
+```html
+...
+<body>
+  <script src="https://unpkg.com/@moderrkowo/jsgl@1.0.1/dist/JSGL.js"></script>
+  <script src="./js/game.js"></script> 
+</body>
+...
+```
+### Node
+To include JSGL in Node, first install with npm.
+```
+npm i @moderrkowo/jsgl
+```
+Example node code
+```js
+const { Vector2 } = require('@moderrkowo/jsgl');
+const exampleVector2 = new Vector2(5, 10);
+console.log(exampleVector2);
+// Vector2 { x: 5, y: 10 }
+```
+## Documentation
+Read @ [Documentation](https://jsglreference.pl/).
 ## Example init
 ``index.html``
 ```html
