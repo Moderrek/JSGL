@@ -1,6 +1,15 @@
-<h1 align="center">⚡ JSGL</h1>
+<div align="center">
+    <h1>⚡ JSGL</h1>
+    <p>
+        <a href="https://github.com/Moderrek/JSGL/blob/release/LICENSE.md"><img src="https://img.shields.io/github/license/Moderrek/JSGL" alt="license"></a>
+        <a href="https://www.codefactor.io/repository/github/moderrek/jsgl"><img src="https://www.codefactor.io/repository/github/moderrek/jsgl/badge" alt="codefactor"></a>
+        <a href="https://www.npmjs.com/package/@moderrkowo/jsgl"><img src="https://img.shields.io/github/v/release/Moderrek/JSGL?include_prereleases" alt="latest"></a>
+        <a href="https://github.com/Moderrek/JSGL/releases/"><img src="https://img.shields.io/github/downloads/Moderrek/JSGL/total" alt="downloads"></a>
+        <a href="https://www.npmjs.com/package/@moderrkowo/jsgl"><img src="https://img.shields.io/npm/v/@moderrkowo/jsgl" alt="version"></a>
+    </p>
+</div>
 
-![License](https://img.shields.io/github/license/Moderrek/JSGL) [![CodeFactor](https://www.codefactor.io/repository/github/moderrek/jsgl/badge)](https://www.codefactor.io/repository/github/moderrek/jsgl) [![Latest Release](https://img.shields.io/github/v/release/Moderrek/JSGL?include_prereleases)](https://github.com/Moderrek/JSGL/releases/tag/v0.1.1-alpha) ![Downloads](https://img.shields.io/github/downloads/Moderrek/JSGL/total)  
+## About
 Client-side JavaScript library for creating web 2D games. Focusing at objective game.
 Use the JSGL to create 2D games.
 ## Features
@@ -12,6 +21,15 @@ Use the JSGL to create 2D games.
 * Easy management objects with Transform and Vector2
 * No need to write HTML. The JSGL.ExampleHTML can render default game page.
 * Drawing text and UI (W.I.P)
+## Installing
+### CDN
+```html
+<script src="https://unpkg.com/@moderrkowo/jsgl@1.0.1/dist/JSGL.js"></script>
+```
+### npm
+```
+npm i @moderrkowo/jsgl
+```
 ## Example init
 ``index.html``
 ```html
