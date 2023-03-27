@@ -1,6 +1,10 @@
 import { Game } from '../Game';
+import { GameEvent } from './GameEvent';
 
-export type GameObjectSpawnEvent = {
-    game: Game;
+/** @group Game Events */
+export interface GameObjectSpawnEvent extends GameEvent {
+    /**
+     * Destroyed game object id
+     */
     gameObjectId: string;
 }

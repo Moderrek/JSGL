@@ -22,7 +22,7 @@ export const defaultDrawSettings: DrawSettings = {
     alpha: 1,
     borderSize: 1,
     shadow: {
-        color: undefined,
+        color: '',
         offsetX: 0,
         offsetY: 0,
         blur: 0

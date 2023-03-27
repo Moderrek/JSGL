@@ -1,13 +1,14 @@
 {
-  "name": "jsgl",
-  "version": "1.0.0-pre2",
+  "name": "@moderr/jsgl",
+  "version": "1.0.0",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
-  "main": "dist/JSGL.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "build": "webpack --mode=production --node-env=production",
+    "build": "webpack --mode=production --node-env=production && tsc",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator"
   },
   "keywords": [
     "game-development",
@@ -41,6 +42,7 @@
     "declaration-bundler-webpack-plugin": "^1.0.3",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.23.28",
     "typescript": "^4.9.5",
     "webpack": "^5.76.1",
     "webpack-cli": "^5.0.1",

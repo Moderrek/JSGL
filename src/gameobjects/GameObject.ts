@@ -1,14 +1,15 @@
 import { Transform } from "../structs/Transform";
-import { OnStartEvent } from "../events/OnStartEvent";
-import { OnDestroyEvent } from "../events/OnDestroyEvent";
+import { GameStartEvent } from "../events/GameStartEvent";
+import { GameObjectDestroyEvent } from "../events/GameObjectDestroyEvent";
 import { TickEvent } from "../events/TickEvent";
 import { DrawEvent } from '../events/DrawEvent';
 
+/** @group Game Objects */
 export class GameObject {
     readonly id: string;
     enabled: boolean;
-    name: string;
-    tag: string;
+    name: string | undefined;
+    tag: string | undefined;
     sortingOrder: number;
     transform: Transform;
 
@@ -21,10 +22,15 @@ export class GameObject {
         this.transform = new Transform(0, 0, 1, 1, 0);
     }
 
-    OnStart(event: OnStartEvent){}
-    OnDestroy(event: OnDestroyEvent){}
+    /** @virtual */
+    OnStart(event: GameStartEvent){}
+    /** @virtual */
+    OnDestroy(event: GameObjectDestroyEvent){}
+    /** @virtual */
     Update(event: TickEvent){}
+    /** @virtual */
     OnDraw(event: DrawEvent){}
+    /** @virtual */
     FixedUpdate(event: TickEvent){}
 
 }
