@@ -28,4 +28,4 @@ export * from './drawing/Shadow';
 
 export const license: string = 'MIT';
 export const author: string = 'Tymon "MODERR" Woźniak';
-export const version: string = '1.0.0';
+export const version: string = '1.0.1';
