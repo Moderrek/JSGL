@@ -28,6 +28,9 @@ export enum ImageQuality {
 export interface GameSettings {
     canvas?: HTMLCanvasElement;
     grid?: Vector2;
+    /**
+     * Is canvas auto resized to parent element size?
+     */
     autoResize?: boolean;
     refreshWhenUnfocused?: boolean;
     canvasImageQuality?: ImageQuality;
@@ -52,6 +55,10 @@ export class Game{
     readonly gameSettings: GameSettings;
 
     // Constructor
+    /**
+     * Constructs new Game instance with given settings.
+     * @param gameSettings The settings
+     */
     constructor(gameSettings: GameSettings){
         this.gameSettings = { ...defaultGameSettings, ...gameSettings };
         if(this.gameSettings.canvas !== undefined){
@@ -98,7 +105,7 @@ export class Game{
     private _isPlaying: boolean = false;
     private _currentMillis: number = 0;
     private _deltaTime: number = 0;
-    isNeedToUpdate: boolean = true;
+    isNeedToUpdate: boolean = false;
     
     private gameLoopUpdate(time: number){
         // Calculation deltaTime

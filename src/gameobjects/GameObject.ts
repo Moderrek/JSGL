@@ -6,13 +6,34 @@ import { DrawEvent } from '../events/DrawEvent';
 
 /** @group Game Objects */
 export class GameObject {
+    /**
+     * Unique game object id
+     */
     readonly id: string;
+    /**
+     * Is enabled
+     */
     enabled: boolean;
+    /**
+     * Game object name
+     */
     name: string | undefined;
+    /**
+     * Game object tag
+     */
     tag: string | undefined;
+    /**
+     * Sorting order
+     */
     sortingOrder: number;
+    /**
+     * Transform - position, width, height and rotation of game object
+     */
     transform: Transform;
 
+    /**
+     * Constructs new GameObject
+     */
     constructor(){
         this.id = crypto.getRandomValues(new Uint32Array(4)).join('-');
         this.enabled = true;
@@ -22,15 +43,30 @@ export class GameObject {
         this.transform = new Transform(0, 0, 1, 1, 0);
     }
 
-    /** @virtual */
+    /**
+     * Invoked at game object spawn
+     *  @virtual
+     */
     OnStart(event: GameStartEvent){}
-    /** @virtual */
+    /** 
+     * Invoked at game object destroy
+     * @virtual
+     */
     OnDestroy(event: GameObjectDestroyEvent){}
-    /** @virtual */
+    /**
+     * Invoked at every frame
+     * @virtual
+     */
     Update(event: TickEvent){}
-    /** @virtual */
+    /** 
+     * Invoked at frame when drawing
+     * @virtual
+     */
     OnDraw(event: DrawEvent){}
-    /** @virtual */
+    /**
+     * Invoked at last update in every frame
+     * @virtual
+     */
     FixedUpdate(event: TickEvent){}
 
 }

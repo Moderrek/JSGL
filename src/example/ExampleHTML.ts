@@ -1,13 +1,13 @@
 /**
  * Properties for {@link ExampleHTML.Render}
  */
-interface ExampleHTMLProps {
+export interface ExampleHTMLProps {
     backgroundColor?: string;
 }
 /**
  * Default properties for {@link ExampleHTML.Render}
  */
-const defaultProps: ExampleHTMLProps = {
+export const defaultProps: ExampleHTMLProps = {
     backgroundColor: undefined
 }
 

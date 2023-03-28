@@ -1,6 +1,12 @@
 /** @group Structs */
 export class Vector2{
+    /**
+     * X-coordinate
+     */
     x: number;
+    /**
+     * Y-coordinate
+     */
     y: number;
 
     /**

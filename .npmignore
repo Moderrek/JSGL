@@ -1,3 +1,7 @@
 /demo
 /todo
 /docs
+.babelrc
+.gitattributes
+tsconfig.json
+webpack.config.js
