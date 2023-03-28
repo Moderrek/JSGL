@@ -20,6 +20,8 @@ Use the JSGL to create 2D games.
 * Easy management objects with Transform and Vector2
 * No need to write HTML. The JSGL.ExampleHTML can render default game page.
 * Drawing text and UI (W.I.P)
+## Documentation
+Read @ [Documentation](https://jsglreference.pl/).
 ## Installing
 ### CDN
 ```html
@@ -52,8 +54,6 @@ const exampleVector2 = new Vector2(5, 10);
 console.log(exampleVector2);
 // Vector2 { x: 5, y: 10 }
 ```
-## Documentation
-Read @ [Documentation](https://jsglreference.pl/).
 ## Example init
 ``index.html``
 ```html
