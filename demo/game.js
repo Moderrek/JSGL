@@ -29,11 +29,9 @@ class Enemy extends JSGL.Sprite{
         this.showHitbox = true;
     }
     Update(event){
-        const rotationPerSec = 30;
-        const rotationPerMillis = rotationPerSec / 1000; 
-        this.transform.rotate(rotationPerMillis * event.deltaTime);
+        this.transform.rotate(30 * event.deltaTime);
         if(this.move)
-            this.transform.move(new JSGL.Vector2(1/10000 * event.deltaTime, 1/10000 * event.deltaTime));
+            this.transform.move(new JSGL.Vector2(1 * event.deltaTime, 1 * event.deltaTime));
         event.game.Update();
     }
     OnMouseClick(event){

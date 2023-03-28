@@ -1,15 +1,39 @@
 import { Shadow } from './Shadow';
 
 export interface DrawSettings {
+    /**
+     * Should the shape have a fill?
+     */
     fill?: boolean;
+    /**
+     * Shape fill color
+     */
     color?: string|CanvasGradient|CanvasPattern;
 
+    /**
+     * Should the shape have a border?
+     */
     border?: boolean;
+    /**
+     * Shape border color
+     */
     borderColor?: string|CanvasGradient|CanvasPattern;
+    /**
+     * Shape border size
+     */
     borderSize?: number;
 
+    /**
+     * Rotation of shape in degrees
+     */
     angle?: number;
+    /**
+     * Shadow settings for shape
+     */
     shadow?: Shadow;
+    /**
+     * Alpha decimal midpoint
+     */
     alpha?: number;
 }
 

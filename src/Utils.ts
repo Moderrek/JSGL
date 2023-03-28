@@ -4,6 +4,11 @@ export function IsInRange(a: number, min: number, max: number): boolean{
 export function Clamp(a: number, min: number, max: number): number{
     return Math.min(max, Math.max(min, a));
 }
+/**
+ * Clamps `a` number to decimal midpoint (0-1)
+ * @param a The number
+ * @returns The clamped01 number
+ */
 export function Clamp01(a: number): number{
     return Clamp(a, 0, 1);
 }

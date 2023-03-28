@@ -5,7 +5,7 @@ import { Vector2 } from '../structs/Vector2';
 import { DrawSettings, defaultDrawSettings } from './DrawSettings';
 
 /**
- * 
+ * Class represents Game Renderer
  */
 export class Renderer {
     private readonly handler: Game;
@@ -64,24 +64,29 @@ export class Renderer {
         return new Vector2(this.canvasWidth, this.canvasHeight);
     }
 
+    /**
+     * Scales number from client coordinate to grid coordinate
+     * @param x The client coordinate
+     * @returns The scaled number
+     */
     scale(x: number): number{
         return x * this.gridSize;
     }
 
-    radians(degrees: number): number{
+    private radians(degrees: number): number{
         degrees %= 360;
         return degrees * Math.PI / 180;
     }
 
-    degrees(radians: number): number{
+    private degrees(radians: number): number{
         return radians / Math.PI * 180;
     }
 
-    combineDrawSettings(drawSettings: DrawSettings | undefined): DrawSettings{
+    private combineDrawSettings(drawSettings: DrawSettings | undefined): DrawSettings{
         return { ...defaultDrawSettings, ...drawSettings };
     }
 
-    setContextSettings(drawSettings: DrawSettings){
+    private setContextSettings(drawSettings: DrawSettings){
         if(drawSettings.color !== undefined)
             this.ctx.fillStyle = drawSettings.color;
         if(drawSettings.borderColor !== undefined)
@@ -100,6 +105,14 @@ export class Renderer {
             this.ctx.shadowBlur = this.scale(drawSettings.shadow.blur);
     }
 
+    /**
+     * Draws a rect.
+     * @param x The X-coordinate
+     * @param y The Y-coordinate
+     * @param width The width
+     * @param height The height
+     * @param drawSettings The draw settings
+     */
     drawRectangle(x: number, y: number, width: number, height: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
@@ -121,6 +134,13 @@ export class Renderer {
         this.ctx.restore();
     }
 
+    /**
+     * Draws a circle.
+     * @param x The X-coordinate
+     * @param y The Y-coordinate
+     * @param diameter The diameter
+     * @param drawSettings The draw settings
+     */
     drawCircle(x: number, y: number, diameter: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
@@ -137,24 +157,15 @@ export class Renderer {
             this.ctx.stroke();
     }
 
-    // drawTriangle(x: number, y: number, width: number, height: number, drawSettings: DrawSettings = undefined){
-    //     drawSettings = this.combineDrawSettings(drawSettings);
-    //     const dx = this.scale(x);
-    //     const dy = this.scale(y);
-    //     const dw = this.scale(width);
-    //     const dh = this.scale(height);
-    //     this.ctx.save();
-    //     this.ctx.translate(dx + dw / 2, dy + dh / 2);
-    //     this.ctx.rotate(this.radians(drawSettings.angle));
-    //     this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
-    //     this.setContextSettings(drawSettings);
-    //     //
-
-    //     //
-    //     this.ctx.restore();
-    // }
-
-    drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings){
+    /**
+     * Draws line from position to another position.
+     * @param x1 From X-coordinate
+     * @param y1 From Y-coordinate
+     * @param x2 To X-coordinate
+     * @param y2 To Y-coordinate
+     * @param drawSettings The draw settings
+     */
+    drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         this.setContextSettings(drawSettings);
         this.ctx.beginPath();
@@ -164,7 +175,15 @@ export class Renderer {
         this.ctx.stroke();
     }
 
-    drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings: DrawSettings) {
+    /**
+     * Draws arrow from position to another position.
+     * @param x1 From X-coordinate
+     * @param y1 From Y-coordinate
+     * @param x2 To X-coordinate
+     * @param y2 To Y-coordinate
+     * @param drawSettings The draw settings
+     */
+    drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings?: DrawSettings) {
         drawSettings = this.combineDrawSettings(drawSettings);
         // Scaling
         const size = this.gridSize / 16;
@@ -195,21 +214,41 @@ export class Renderer {
         this.ctx.restore();
       }
 
+    /**
+     * Clears canvas
+     */
     clearFrame(){
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
+    /**
+     * Fills canvas with color property from settings
+     * @param drawSettings The settings
+     */
     fillFrame(drawSettings: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         this.setContextSettings(drawSettings);
         this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
+    /**
+     * Fills canvas with image.
+     * @param image The image
+     */
     fillImageFrame(image: HTMLCanvasElement){
         this.ctx.drawImage(image, 0, 0, this.canvasWidth, this.canvasHeight);
     }
 
-    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, drawSettings: DrawSettings){
+    /**
+     * Draws image.
+     * @param image The image 
+     * @param x The X-coordinate
+     * @param y The Y-coordinate
+     * @param width The width
+     * @param height The height
+     * @param drawSettings The draw settings
+     */
+    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(x);
         const dy = this.scale(y);
@@ -224,10 +263,19 @@ export class Renderer {
         this.ctx.restore();
     }
 
-    drawSprite(sprite: Sprite){
-        if(sprite.texture === undefined){
+    /**
+     * Draws sprite texture
+     * @param sprite The sprite
+     * @returns is success?
+     */
+    drawSprite(sprite: Sprite): boolean{
+        if(sprite.texture === undefined || sprite.texture === null){
             console.warn("The Sprite ", sprite, " has not assigned texture!");
-            return;
+            return false;
+        }
+        if(!(sprite.texture instanceof HTMLImageElement)){
+            console.warn(`Texture ${sprite.name}[${sprite.id}] cannot be ${typeof sprite.texture}!`);
+            return false;
         }
         this.drawImage(
             sprite.texture,
@@ -237,8 +285,13 @@ export class Renderer {
             sprite.transform.scale.y,
             { angle: sprite.transform.rotation }
         );
+        return true;
     }
 
+    /**
+     * Draws hitbox to sprite
+     * @param sprite The sprite
+     */
     drawSpriteHitBox(sprite: Sprite){
         const pos = sprite.transform.position;
         const center = sprite.transform.positionCenter;
