@@ -25,7 +25,7 @@ Read @ [Documentation](https://jsglreference.pl/).
 ## Installing
 ### CDN
 ```html
-<script src="https://unpkg.com/@moderrkowo/jsgl@1.0.4/dist/JSGL.js"></script>
+<script src="https://unpkg.com/@moderrkowo/jsgl@1.0.5/dist/JSGL.js"></script>
 ```
 ### npm
 ```
@@ -37,7 +37,7 @@ To include JSGL in browser add script tag to body element. Like below.
 ```html
 ...
 <body>
-  <script src="https://unpkg.com/@moderrkowo/jsgl@1.0.4/dist/JSGL.js"></script>
+  <script src="https://unpkg.com/@moderrkowo/jsgl@1.0.5/dist/JSGL.js"></script>
   <script src="./js/game.js"></script> 
 </body>
 ...
