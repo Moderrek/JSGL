@@ -3,7 +3,7 @@ import { Game } from "../Game";
 /** @group Game Events */
 export interface GameEvent{
     /**
-     * Game reference
+     * Event owner reference
      */
     game: Game;
 }

@@ -1,29 +1,30 @@
-import { GameObject } from "./GameObject";
-import { DrawEvent } from '../events/DrawEvent';
-import { GameStartEvent } from "../events/GameStartEvent";
-import { GameMouseEvent } from "../events/GameMouseEvent";
+import { ClickableGameObject } from "./ClickableGameObject";
 
-/** @group Game Objects */
-export class Sprite extends GameObject{
+import { DrawEvent } from '../events/DrawEvent';
+import { GameObjectSpawnEvent } from "../events/gameobject/GameObjectSpawnEvent";
+import { RotationStyle } from "../enums/RotationStyle";
+
+/** 
+ * Represents sprite game object
+ * @group Game Objects
+ */
+export class Sprite extends ClickableGameObject{
     
-    /**
-     * Is sprite visible?
-     */
-    visible: boolean = true;
     /**
      * Sprite texture
      */
     texture: HTMLImageElement | undefined;
+
     /**
-     * Is sprite hitbox visible?
+     * Sprite rotation style
      */
-    showHitbox: boolean = false;
+    rotationStyle: RotationStyle = RotationStyle.allAround;
 
     /** 
      * Calls `event.game.Update()` at spawn
      * @override
      */
-    override OnStart(event: GameStartEvent): void {
+    override OnStart(event: GameObjectSpawnEvent): void {
         event.game.Update();
     }
 
@@ -32,18 +33,11 @@ export class Sprite extends GameObject{
      * @override
      */
     override OnDraw(event: DrawEvent): void {
+        if(this.texture === undefined)
+            return;
         if(this.visible){
             event.renderer.drawSprite(this);
-            if(this.showHitbox)
-                event.renderer.drawSpriteHitBox(this);
         }
     }
-
-    /**
-     * Invoked at click on Sprite
-     * @returns is handled?
-     * @virtual
-     */
-    OnMouseClick(event: GameMouseEvent): boolean{ return false; /* not handled */ }
 
 }

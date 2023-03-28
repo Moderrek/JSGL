@@ -1,10 +1,13 @@
 import { Transform } from "../structs/Transform";
-import { GameStartEvent } from "../events/GameStartEvent";
-import { GameObjectDestroyEvent } from "../events/GameObjectDestroyEvent";
-import { TickEvent } from "../events/TickEvent";
-import { DrawEvent } from '../events/DrawEvent';
 
-/** @group Game Objects */
+import { GameObjectDestroyEvent } from "../events/gameobject/GameObjectDestroyEvent";
+import { TickEvent } from "../events/TickEvent";
+import { GameObjectSpawnEvent } from "../events/gameobject/GameObjectSpawnEvent";
+
+/**
+ * Represents plain GameObject
+ * @group Game Objects
+ */
 export class GameObject {
     /**
      * Unique game object id
@@ -47,7 +50,7 @@ export class GameObject {
      * Invoked at game object spawn
      *  @virtual
      */
-    OnStart(event: GameStartEvent){}
+    OnStart(event: GameObjectSpawnEvent){}
     /** 
      * Invoked at game object destroy
      * @virtual
@@ -58,11 +61,6 @@ export class GameObject {
      * @virtual
      */
     Update(event: TickEvent){}
-    /** 
-     * Invoked at frame when drawing
-     * @virtual
-     */
-    OnDraw(event: DrawEvent){}
     /**
      * Invoked at last update in every frame
      * @virtual

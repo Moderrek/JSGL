@@ -1,26 +1,40 @@
 import { Game } from '../Game';
-import { Clamp01 } from '../Utils';
 import { Sprite } from '../gameobjects/Sprite';
 import { Vector2 } from '../structs/Vector2';
 import { DrawSettings, defaultDrawSettings } from './DrawSettings';
+import { ClickableGameObject } from '../gameobjects/ClickableGameObject';
+import { Clamp01 } from '../utils/math/MathUtils';
+import { RotationStyle } from '../enums/RotationStyle';
 
 /**
- * Class represents Game Renderer
+ * Class represents Game Renderer.
  */
 export class Renderer {
+    /**
+     * Renderer owner.
+     */
     private readonly handler: Game;
+    /**
+     * How many pixels have one grid unit.
+     */
     gridSize: number = 0;
+    /**
+     * The decimal midpoint of parent element size.
+     */
     canvasParentSize: number = 1;
 
     /**
-     * Constructs new Renderer
+     * Constructs new Renderer.
      * @param handler The {@link Game} reference
      */
     constructor(handler: Game){
         this.handler = handler;
     }
 
-    resizeCanvas(): void{
+    /**
+     * Resize canvas to parent element size by canvasParentSize (decimal midpoint).
+     */
+    resizeCanvas(){
         if(!(this.handler.canvas instanceof HTMLCanvasElement))
             throw new Error("Cannot resize undefined canvas!");
         
@@ -39,20 +53,37 @@ export class Renderer {
         this.canvasHeight = this.handler.grid.y * this.gridSize;
     }
 
+    /**
+     * Gets canvas width in pixels.
+     */
     get canvasWidth(): number{
         return this.handler.canvas.width;
     }
+    /**
+     * Sets canvas width in pixels.
+     * @param width The new width
+     */
     set canvasWidth(width: number){
         this.handler.canvas.width = width;
     }
 
+    /**
+     * Gets canvas height in pixels.
+     */
     get canvasHeight(): number{
         return this.handler.canvas.height;
     }
+    /**
+     * Sets canvas height in pixels.
+     * @param height The new height
+     */
     set canvasHeight(height: number){
         this.handler.canvas.height = height;
     }
 
+    /**
+     * Gets the {@link CanvasRenderingContext2D}.
+     */
     get ctx(): CanvasRenderingContext2D{
         const context = this.handler.canvas.getContext('2d');
         if(context == null)
@@ -60,12 +91,15 @@ export class Renderer {
         return context;
     }
 
+    /**
+     * Gets the Vector2 of width and height in pixels.
+     */
     get canvasSize(): Vector2{
         return new Vector2(this.canvasWidth, this.canvasHeight);
     }
 
     /**
-     * Scales number from client coordinate to grid coordinate
+     * Scales number from client coordinate to grid coordinate.
      * @param x The client coordinate
      * @returns The scaled number
      */
@@ -73,19 +107,38 @@ export class Renderer {
         return x * this.gridSize;
     }
 
+    /**
+     * Converts degrees to radians.
+     * @param degrees The degrees
+     * @returns The radians
+     */
     private radians(degrees: number): number{
         degrees %= 360;
         return degrees * Math.PI / 180;
     }
 
+    /**
+     * Converts radians to degrees.
+     * @param radians The radians
+     * @returns The degrees
+     */
     private degrees(radians: number): number{
         return radians / Math.PI * 180;
     }
 
+    /**
+     * Combines given draw settings with default draw settings.
+     * @param drawSettings The given draw settings 
+     * @returns The combined draw settings
+     */
     private combineDrawSettings(drawSettings: DrawSettings | undefined): DrawSettings{
         return { ...defaultDrawSettings, ...drawSettings };
     }
 
+    /**
+     * Sets canvas context properties to given settings.
+     * @param drawSettings The draw settings
+     */
     private setContextSettings(drawSettings: DrawSettings){
         if(drawSettings.color !== undefined)
             this.ctx.fillStyle = drawSettings.color;
@@ -121,8 +174,11 @@ export class Renderer {
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        if(drawSettings.angle !== undefined)
-            this.ctx.rotate(this.radians(drawSettings.angle));
+        if(drawSettings.angle !== undefined){
+            if(drawSettings.rotationStyle === RotationStyle.allAround){
+                this.ctx.rotate(this.radians(drawSettings.angle));
+            }
+        }
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
         this.setContextSettings(drawSettings);
         //
@@ -215,14 +271,14 @@ export class Renderer {
       }
 
     /**
-     * Clears canvas
+     * Clears the canvas.
      */
     clearFrame(){
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
     /**
-     * Fills canvas with color property from settings
+     * Fills the canvas with color property from settings.
      * @param drawSettings The settings
      */
     fillFrame(drawSettings: DrawSettings){
@@ -256,15 +312,18 @@ export class Renderer {
         const dh = this.scale(height);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        if(drawSettings.angle !== undefined)
-            this.ctx.rotate(this.radians(drawSettings.angle));
+        if(drawSettings.angle !== undefined){
+            if(drawSettings.rotationStyle === RotationStyle.allAround){
+                this.ctx.rotate(this.radians(drawSettings.angle));
+            }
+        }
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
         this.ctx.drawImage(image, dx, dy, dw, dh);
         this.ctx.restore();
     }
 
     /**
-     * Draws sprite texture
+     * Draws sprite texture.
      * @param sprite The sprite
      * @returns is success?
      */
@@ -283,19 +342,21 @@ export class Renderer {
             sprite.transform.position.y,
             sprite.transform.scale.x,
             sprite.transform.scale.y,
-            { angle: sprite.transform.rotation }
+            { angle: sprite.transform.rotation, rotationStyle: sprite.rotationStyle }
         );
         return true;
     }
 
     /**
-     * Draws hitbox to sprite
-     * @param sprite The sprite
+     * Draws hitbox with direction arrow.
+     * @param clickableObject The clickable game object
      */
-    drawSpriteHitBox(sprite: Sprite){
-        const pos = sprite.transform.position;
-        const center = sprite.transform.positionCenter;
-        const scale = sprite.transform.scale;
+    drawHitbox(clickableObject: ClickableGameObject){
+        if(!clickableObject.showHitbox)
+            return;
+        const pos = clickableObject.transform.position;
+        const center = clickableObject.transform.positionCenter;
+        const scale = clickableObject.transform.scale;
         this.drawRectangle(
             pos.x,
             pos.y,
@@ -317,7 +378,7 @@ export class Renderer {
             pos.y + scale.y,
             { borderColor: 'red' }
         );
-        const angle = sprite.transform.getRadians();
+        const angle = clickableObject.transform.getRadians();
         this.drawArrow(
             center.x,
             center.y,
@@ -325,7 +386,6 @@ export class Renderer {
             center.y + ((scale.y / 2 ) * Math.sin(angle)),
             { color: 'red', borderColor: 'red' }
         )
-    }
-    
+    }   
 
 }

@@ -1,14 +1,20 @@
 {
   "name": "@moderrkowo/jsgl",
-  "version": "1.0.3",
+  "displayName": "JSGL",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
+  "version": "1.0.4",
+  "publisher": "Tymon Woźniak",
   "main": "./dist/index.js",
-  "scripts": {
-    "build": "webpack --mode=production --node-env=production && tsc",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production && tsc",
-    "watch": "webpack --watch",
-    "docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator"
+  "homepage": "https://jsglreference.pl/",
+  "bugs": {
+    "url": "https://github.com/Moderrek/JSGL/issues",
+    "email": "tymon.wozniak@my.com"
+  },
+  "author": "Tymon Woźniak",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Moderrek/JSGL.git"
   },
   "keywords": [
     "game-development",
@@ -22,11 +28,12 @@
     "animation",
     "library"
   ],
-  "author": "Tymon Woźniak",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Moderrek/JSGL.git"
+  "scripts": {
+    "build": "webpack --mode=production --node-env=production && tsc",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production && tsc",
+    "watch": "webpack --watch",
+    "docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
