@@ -98,7 +98,7 @@ export class Game{
     private _isPlaying: boolean = false;
     private _currentMillis: number = 0;
     private _deltaTime: number = 0;
-    isNeedToUpdate: boolean = false;
+    isNeedToUpdate: boolean = true;
     
     private _gameLoopUpdate(time: number){
         // Calculation deltaTime
