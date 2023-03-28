@@ -38,7 +38,11 @@ export class Transform{
      * @beta
      */
     bounce(){
-        this.rotation *= 2;
+        if(this.rotation >= 180){
+            this.rotation += 180;
+        }else{
+            this.rotation -= 180;
+        }
     }
 
     /**
