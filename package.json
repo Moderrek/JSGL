@@ -1,6 +1,6 @@
 {
   "name": "@moderrkowo/jsgl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
   "main": "./dist/index.js",
   "scripts": {
