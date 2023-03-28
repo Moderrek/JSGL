@@ -4,23 +4,16 @@ import { GameEvent } from "./events/GameEvent";
 import { Resource } from "./structs/Resource";
 import { Callback } from "./signals/Callback";
 import { Renderer } from './drawing/Renderer';
-import { GameObject } from './gameobjects/GameObject';
-import { Sprite } from "./gameobjects/Sprite";
-import { IsInRange } from "./Utils";
+import { GameObject } from "./gameobjects/GameObject";
 import { GameMouseEvent } from './events/GameMouseEvent';
-import { GameObjectSpawnEvent } from "./events/GameObjectSpawnEvent";
-import { GameObjectDestroyEvent } from "./events/GameObjectDestroyEvent";
+import { GameObjectSpawnEvent } from "./events/gameobject/GameObjectSpawnEvent";
+import { GameObjectDestroyEvent } from "./events/gameobject/GameObjectDestroyEvent";
 import { DrawEvent } from "./events/DrawEvent";
 import { TickEvent } from "./events/TickEvent";
-
-/**
- * Represents canvas scaling image quality.
- */
-export enum ImageQuality {
-    High = 'high',
-    Medium = 'medium',
-    Low = 'low'
-}
+import { ClickableGameObject } from "./gameobjects/ClickableGameObject";
+import { DrawableGameObject } from "./gameobjects/DrawableGameObject";
+import { ImageQuality } from "./enums/ImageQuality";
+import { IsInRange, floor } from "./utils/math/MathUtils";
 
 /**
  * The {@link Game} settings.
@@ -71,7 +64,7 @@ export class Game{
         }else{
             throw new Error("Cannot asign grid.");
         }
-        this.registerCanvasEvents();
+        this._registerCanvasEvents();
         if(this.gameSettings.autoResize){
             window.addEventListener('resize', () => {
                 this.renderer.resizeCanvas();
@@ -94,7 +87,7 @@ export class Game{
         this.renderer.resizeCanvas();
         return this.renderer.canvasSize;
     }
-    private registerCanvasEvents(){
+    private _registerCanvasEvents(){
         this.canvas.addEventListener('mousemove', (event) => {this.mouseMoveHandler(this, event)});
         document.addEventListener('mouseup', (event) => {this.mouseUpHandler(this, event)});
         document.addEventListener('mousedown', (event) => {this.mouseDownHandler(this, event)});
@@ -107,7 +100,7 @@ export class Game{
     private _deltaTime: number = 0;
     isNeedToUpdate: boolean = false;
     
-    private gameLoopUpdate(time: number){
+    private _gameLoopUpdate(time: number){
         // Calculation deltaTime
         this._deltaTime = time - this._currentMillis;
         this._currentMillis = time;
@@ -118,7 +111,7 @@ export class Game{
         }
         for (const gameObject of this.gameObjects) {
             if (!gameObject.enabled)
-                return;
+                continue;
             try{
                 gameObject.Update(tickEvent);
             }catch (e: any){
@@ -130,7 +123,7 @@ export class Game{
         // Fixed Update
         for (const gameObject of this.gameObjects) {
             if (!gameObject.enabled)
-                return;
+                continue;
             try{
                 gameObject.FixedUpdate(tickEvent);
             }catch (e: any){
@@ -141,9 +134,8 @@ export class Game{
         }
     }
 
-    private gameLoopDraw(){
-        // Draw
-        if (this.isNeedToUpdate) {
+    private _gameLoopDraw(){
+        if (this.isNeedToUpdate){
             this.renderer.clearFrame();
             const drawEvent: DrawEvent = {
                 renderer: this.renderer,
@@ -152,31 +144,35 @@ export class Game{
             this.emit('draw', drawEvent);
             for (const gameObject of this.gameObjects) {
                 if (!gameObject.enabled)
-                    return;
+                    continue;
+                if(!(gameObject instanceof DrawableGameObject))
+                    continue;
                 try{
                     gameObject.OnDraw(drawEvent);
+                    if(gameObject instanceof ClickableGameObject){
+                        const clickable = gameObject as ClickableGameObject
+                        this.renderer.drawHitbox(clickable);
+                    }
                 }catch (e: any){
-                    console.warn(`Problem with executing draw @ ${gameObject.constructor.name} [${gameObject.id}]`);
-                    console.warn(gameObject);
+                    console.warn(`Problem with executing draw @ ${gameObject.constructor.name} `, gameObject);
                     console.error(e.stack);
                 }
-            
             }
             this.isNeedToUpdate = false;
         }
     }
 
-    private readonly gameLoop = (time: number) => { 
-        this.gameLoopUpdate(time);
+    private readonly _gameLoop = (time: number) => { 
+        this._gameLoopUpdate(time);
         if(!document.hasFocus() && !this.gameSettings.refreshWhenUnfocused){
             if (this._isPlaying)
-                window.requestAnimationFrame(this.gameLoop);
+                window.requestAnimationFrame(this._gameLoop);
             return;
         }
-        this.gameLoopDraw();
+        this._gameLoopDraw();
         // Continue loop
         if (this._isPlaying)
-                window.requestAnimationFrame(this.gameLoop);
+                window.requestAnimationFrame(this._gameLoop);
     };
 
     /**
@@ -196,7 +192,7 @@ export class Game{
             return;
         }
         window.requestAnimationFrame(() => {
-            window.requestAnimationFrame(this.gameLoop.bind(this));
+            window.requestAnimationFrame(this._gameLoop.bind(this));
             this._isPlaying = true;
         });
     }
@@ -222,13 +218,14 @@ export class Game{
      */
     LoadGameAndStart(): Callback{
         const callback = new Callback();
-        const game = this;
         const whenLoaded = () => {
-            game.Start();
+            this.Start();
             callback.execThen();
         }
-        game.on('loadAllResources', whenLoaded);
-        game.LoadAllResources();
+        setTimeout(() => {
+            this.on('loadAllResources', whenLoaded);
+            this.LoadAllResources();
+        }, 1);
         return callback;
     }
 
@@ -236,8 +233,8 @@ export class Game{
     private readonly _signals: Signals = new Signals();
     emit = (channel: string, event: GameEvent) => this._signals.emit(channel, event);
     /**
-     * Appends listener to event system.
-     * @param channel The listener signal channel.
+     * Appends listener to event channel.
+     * @param channel The listener event channel.
      * @param callback Executed function after receiving a signal on given channel.
      */
     on = (channel: string, callback: (event: GameEvent) => void) => this._signals.on(channel, callback);
@@ -346,6 +343,9 @@ export class Game{
     }
 
     // GameObjects
+    /**
+     * Sorted game object array
+     */
     readonly gameObjects: Array<GameObject> = [];
     /**
      * Sorts all game objects by sorting order property.
@@ -369,11 +369,11 @@ export class Game{
             gameObject.name = gameObject.constructor.name;
         this.gameObjects.push(gameObject);
         this.SortGameObjects();
-        gameObject.OnStart({ game: this });
         const gameObjectSpawnEvent: GameObjectSpawnEvent = {
-            gameObjectId: gameObject.id,
-            game: this
+            game: this,
+            gameObjectId: gameObject.id
         }
+        gameObject.OnStart(gameObjectSpawnEvent);
         this.emit('spawnedGameObject', gameObjectSpawnEvent);
         return gameObject;
     }
@@ -511,6 +511,16 @@ export class Game{
     mousePrecisePos: Vector2 = new Vector2();
     mouseClientPos: Vector2 = new Vector2();
     isMousePrimaryButtonDown: boolean = false;
+    private constructMouseEvent(): GameMouseEvent{
+        const gameMouseEvent: GameMouseEvent = {
+            game: this,
+            mousePos: this.mousePos,
+            mousePrecisePos: this.mousePrecisePos,
+            mouseClientPos: this.mouseClientPos,
+            isMouseDown: this.isMousePrimaryButtonDown
+        }
+        return gameMouseEvent; 
+    }
     private mouseMoveHandler(game: Game, event: MouseEvent){
         game.mouseClientPos = new Vector2(event.offsetX, event.offsetY);
         const gridPos = game.mouseClientPos.clone();
@@ -519,65 +529,42 @@ export class Game{
         game.mousePrecisePos = gridPos.clone();
         gridPos.floor();
         game.mousePos = gridPos;
-        const gameMouseEvent: GameMouseEvent = {
-            game: this,
-            mousePos: game.mousePos,
-            mousePrecisePos: game.mousePrecisePos,
-            mouseClientPos: game.mouseClientPos,
-            isMouseDown: game.isMousePrimaryButtonDown
-        }
-        game.emit('mouseMove', gameMouseEvent);
+        
+        game.emit('mouseMove', game.constructMouseEvent());
     }
     private mouseDownHandler(game: Game, event: MouseEvent){
         game.isMousePrimaryButtonDown = true;
-        const gameMouseEvent: GameMouseEvent = {
-            game: this,
-            mousePos: game.mousePos,
-            mousePrecisePos: game.mousePrecisePos,
-            mouseClientPos: game.mouseClientPos,
-            isMouseDown: game.isMousePrimaryButtonDown
-        }
-        game.emit('mouseDown', gameMouseEvent);
+        game.emit('mouseDown', game.constructMouseEvent());
     }
     private mouseUpHandler(game: Game, event: MouseEvent){
         game.isMousePrimaryButtonDown = false;
-        const gameMouseEvent: GameMouseEvent = {
-            game: this,
-            mousePos: game.mousePos,
-            mousePrecisePos: game.mousePrecisePos,
-            mouseClientPos: game.mouseClientPos,
-            isMouseDown: game.isMousePrimaryButtonDown
-        }
-        game.emit('mouseUp', gameMouseEvent);
+        game.emit('mouseUp', game.constructMouseEvent());
     }
     private mouseClickHandler(game: Game, event: MouseEvent){
-        const gameMouseEvent: GameMouseEvent = {
-            game: this,
-            mousePos: game.mousePos,
-            mousePrecisePos: game.mousePrecisePos,
-            mouseClientPos: game.mouseClientPos,
-            isMouseDown: game.isMousePrimaryButtonDown
-        }
+        const gameMouseEvent: GameMouseEvent = game.constructMouseEvent()
         for(let i = this.gameObjects.length - 1; i >= 0; i -= 1){
             const gameObject = this.gameObjects[i];
             if(!gameObject.enabled)
                 continue;
-            if(gameObject instanceof Sprite && !gameObject.visible)
+            if(!(gameObject instanceof ClickableGameObject))
                 continue;
-            const sprite = (gameObject as Sprite);
-            if(sprite.transform.scale.x <= 0 || sprite.transform.scale.y <= 0)
+            const clickableObj = (gameObject as ClickableGameObject);
+            if(clickableObj.transform.scale.x <= 0 || clickableObj.transform.scale.y <= 0)
                 continue;
-            const minX = sprite.transform.position.x;
-            const maxX = sprite.transform.position.x + sprite.transform.scale.x;
-            const minY = sprite.transform.position.y;
-            const maxY = sprite.transform.position.y + sprite.transform.scale.y;
+            const minX = clickableObj.transform.position.x;
+            const maxX = clickableObj.transform.position.x + clickableObj.transform.scale.x;
+            const minY = clickableObj.transform.position.y;
+            const maxY = clickableObj.transform.position.y + clickableObj.transform.scale.y;
             const isInRange = IsInRange(game.mousePrecisePos.x, minX, maxX) && IsInRange(game.mousePrecisePos.y, minY, maxY);
             if(isInRange){
-                if(sprite.OnMouseClick(gameMouseEvent)){
+                if(clickableObj.OnMouseClick(gameMouseEvent))
                     break;
-                }
             }
         }
         game.emit('mouseClick', gameMouseEvent);
+    }
+
+    GetRandomPosition(): Vector2{
+        return new Vector2(floor(Math.random() * this.grid.x), floor(Math.random() * this.grid.y));
     }
 }

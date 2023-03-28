@@ -1,5 +1,9 @@
+import { RotationStyle } from '../enums/RotationStyle';
 import { Shadow } from './Shadow';
 
+/**
+ * Represents renderer properties
+ */
 export interface DrawSettings {
     /**
      * Should the shape have a fill?
@@ -22,7 +26,6 @@ export interface DrawSettings {
      * Shape border size
      */
     borderSize?: number;
-
     /**
      * Rotation of shape in degrees
      */
@@ -35,6 +38,10 @@ export interface DrawSettings {
      * Alpha decimal midpoint
      */
     alpha?: number;
+    /**
+     * Rotation style
+     */
+    rotationStyle?: RotationStyle
 }
 
 export const defaultDrawSettings: DrawSettings = {
@@ -50,5 +57,6 @@ export const defaultDrawSettings: DrawSettings = {
         offsetX: 0,
         offsetY: 0,
         blur: 0
-    }
+    },
+    rotationStyle: RotationStyle.allAround
 }

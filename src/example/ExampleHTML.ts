@@ -1,20 +1,19 @@
 /**
  * Properties for {@link ExampleHTML.Render}
  */
-export interface ExampleHTMLProps {
-    backgroundColor?: string;
+export interface ExampleHTMLProperties {
+    backgroundColor?: string|undefined;
 }
 /**
  * Default properties for {@link ExampleHTML.Render}
  */
-export const defaultProps: ExampleHTMLProps = {
+export const exampleHTMLDefaultProperties: ExampleHTMLProperties = {
     backgroundColor: undefined
 }
 
 /** 
  * Helps with creating game page.
  * @group Tools
- * 
  */
 export class ExampleHTML {
 
@@ -23,8 +22,8 @@ export class ExampleHTML {
      * Page is sized to viewport and canvas is centered.
      * @param props The properties.
      */
-    static Render(props: ExampleHTMLProps){
-        props = { ...defaultProps, ...props };
+    static Render(props: ExampleHTMLProperties){
+        props = { ...exampleHTMLDefaultProperties, ...props };
         document.write('<div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;"><canvas id="gameCanvas"></canvas></div>');
         document.body.style.height = '100vh';
         document.body.style.width = '100vw';

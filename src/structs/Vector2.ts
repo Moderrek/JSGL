@@ -1,3 +1,5 @@
+import { IsInRange } from "../utils/math/MathUtils";
+
 /** @group Structs */
 export class Vector2{
     /**
@@ -21,6 +23,10 @@ export class Vector2{
             throw new Error("Y must be an number!");
         this.x = x;
         this.y = y;
+    }
+
+    static IsPointIn(min: Vector2, max: Vector2, point: Vector2){
+        return IsInRange(point.x, min.x, max.x) && IsInRange(point.y, min.y, max.y);
     }
 
     /**

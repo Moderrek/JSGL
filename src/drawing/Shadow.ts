@@ -1,14 +1,17 @@
+/**
+ * Represents Shadow settings.
+ */
 export interface Shadow {
     /**
      * Shadow color
      */
     color: string;
     /**
-     * Offset X-coordinate
+     * Shadow offset X-coordinate
      */
     offsetX: number;
     /**
-     * Offset Y-coordinate
+     * Shadow offset Y-coordinate
      */
     offsetY: number;
     /**

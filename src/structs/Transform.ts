@@ -1,4 +1,5 @@
 import { Vector2 } from "./Vector2";
+import { Clamp } from '../utils/math/MathUtils';
 
 /** @group Structs */
 export class Transform{
@@ -31,6 +32,26 @@ export class Transform{
         const x = this.position.x + ( this.scale.x / 2 );
         const y = this.position.y + ( this.scale.y / 2);
         return new Vector2(x, y);
+    }
+
+    /**
+     * @beta
+     */
+    bounce(){
+        this.rotation *= 2;
+    }
+
+    /**
+     * @beta
+     * @param grid Game canvas grid setting 
+     */
+    ifOnEdgeBounce(grid: Vector2){
+        const isOnEdge = !(Vector2.IsPointIn(new Vector2(), grid.clone().subtract(new Vector2(this.scale.x, this.scale.y)), this.position));
+        if(isOnEdge){
+            this.position.x = Clamp(this.position.x, 0, grid.x - this.scale.x);
+            this.position.y = Clamp(this.position.y, 0, grid.y - this.scale.y);
+            this.bounce();
+        }
     }
 
     /**
@@ -173,13 +194,27 @@ export class Transform{
     }
 
     /**
-     * Moves Transform by Vector2 in actual rotation
+     * Sets new position by param.
+     * @param v The new position.
+     */
+    goTo(v: Vector2){
+        this.setPostition(v);
+    }
+
+    
+
+    /**
+     * Moves Transform by Vector2 in actual direction
      * @param v The Vector2
      */
     move(v: Vector2){
+        if(!(v instanceof Vector2))
+            throw new Error("To move game object param must be Vector2!");
         this.position.x += v.x * Math.cos(this.getRadians());
         this.position.y += v.y * Math.sin(this.getRadians());
     }
+
+    
 
     /**
      * Clones object

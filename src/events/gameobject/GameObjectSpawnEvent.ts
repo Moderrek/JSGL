@@ -1,7 +1,9 @@
-import { Game } from '../Game';
-import { GameEvent } from './GameEvent';
+import { GameEvent } from '../GameEvent';
 
-/** @group Game Events */
+/** 
+ * Invoked at game object spawn
+ * @group Game Events 
+ */
 export interface GameObjectSpawnEvent extends GameEvent {
     /**
      * Destroyed game object id

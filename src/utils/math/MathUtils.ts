@@ -1,13 +1,35 @@
+/**
+ * Speedy floor faster than Math.floor(a)
+ * @param a Value to floor
+ * @returns The floored number
+ */
+export function floor(a: number) {
+  return a | a;
+}
+/**
+ * Checks is number in range
+ * @param a Value to check
+ * @param min Minimal of range
+ * @param max Maximum of range
+ * @returns is number in range
+ */
 export function IsInRange(a: number, min: number, max: number): boolean{
     return a >= min && a <= max;
 }
+/**
+ * Clamps number between min and max
+ * @param a Value to clamp
+ * @param min The minimum value
+ * @param max The maximum value
+ * @returns Clamped number
+ */
 export function Clamp(a: number, min: number, max: number): number{
     return Math.min(max, Math.max(min, a));
 }
 /**
- * Clamps `a` number to decimal midpoint (0-1)
- * @param a The number
- * @returns The clamped01 number
+ * Clamps number between 0 and 1
+ * @param a Value to clamp
+ * @returns Clamped01 number
  */
 export function Clamp01(a: number): number{
     return Clamp(a, 0, 1);

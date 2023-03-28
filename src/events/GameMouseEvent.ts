@@ -1,7 +1,10 @@
 import { Vector2 } from "../structs/Vector2"
 import { GameEvent } from "./GameEvent";
 
-/** @group Game Events */
+/** 
+ * Invoked at client mouse event
+ * @group Game Events 
+ */
 export interface GameMouseEvent extends GameEvent {
     /**
      * Integer Vector2 mouse position on grid
