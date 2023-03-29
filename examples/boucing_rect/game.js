@@ -17,7 +17,7 @@ class BouncingRect extends JSGL.Shape {
         const deltaTime = event.deltaTime;
         this.transform.rotate(45 * deltaTime);
         this.transform.move(new JSGL.Vector2(5 * deltaTime, 5 * deltaTime));
-        this.transform.ifOnEdgeBounce(myGrid);
+        this.transform.ifOnEdgeBounce(event.game.grid);
         event.game.Update();
     }
 }
