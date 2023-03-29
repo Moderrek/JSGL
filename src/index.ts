@@ -12,9 +12,12 @@ export * from './structs/Resource';
 export * from './gameobjects/GameObject';
 export * from './gameobjects/ClickableGameObject';
 export * from './gameobjects/Shape';
+export * from './gameobjects/SimpleShape';
 export * from './gameobjects/Sprite';
+export * from './gameobjects/SimpleSprite';
 
 export * from './example/ExampleHTML';
+export * from './example/DefaultGame';
 
 export * from './utils/math/MathUtils';
 export * from './Game';

@@ -1,6 +1,5 @@
-/demo
-/todo
 /docs
+/dev
 .babelrc
 .gitattributes
 tsconfig.json
