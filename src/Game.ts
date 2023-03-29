@@ -384,11 +384,13 @@ export class Game{
     DestroyGameObjectByRef(gameObject: GameObject){
         if(!(gameObject instanceof GameObject))
             throw new Error("Param gameObject must be an GameObject object!");
-        const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
+        const index = this.gameObjects.indexOf(gameObject);
+        if(index === -1)
+            return;
         const onDestroyEvent: GameObjectDestroyEvent = {
             game: this
         }
-        this.gameObjects[index].OnDestroy(onDestroyEvent);
+        gameObject.OnDestroy(onDestroyEvent);
         this.gameObjects.splice(index, 1);
         this.SortGameObjects();
     }
@@ -403,6 +405,8 @@ export class Game{
         if(gameObject === undefined)
             return;
         const index = this.gameObjects.findIndex((element) => element.id === gameObject.id);
+        if(index === -1)
+            return;
         const onDestroyEvent: GameObjectDestroyEvent = {
             game: this
         }

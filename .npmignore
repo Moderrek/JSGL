@@ -1,7 +1,9 @@
-/demo
-/todo
 /docs
+/dev
+/examples
+/.github
 .babelrc
 .gitattributes
+.gitignore
 tsconfig.json
 webpack.config.js

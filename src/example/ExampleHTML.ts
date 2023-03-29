@@ -22,7 +22,7 @@ export class ExampleHTML {
      * Page is sized to viewport and canvas is centered.
      * @param props The properties.
      */
-    static Render(props: ExampleHTMLProperties){
+    static Render(props: ExampleHTMLProperties | undefined){
         props = { ...exampleHTMLDefaultProperties, ...props };
         document.write('<div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;"><canvas id="gameCanvas"></canvas></div>');
         document.body.style.height = '100vh';
