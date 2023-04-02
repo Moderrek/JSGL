@@ -33,7 +33,7 @@ npm i @moderrkowo/jsgl
 ```
 ## Including JSGL
 ### Browser
-To include JSGL in browser add script tag to body element. Like below.
+To include JSGL in browser add script tag to body element. Like below or check [examples](https://github.com/Moderrek/JSGL/tree/release/examples/).
 ```html
 ...
 <body>
@@ -55,4 +55,4 @@ console.log(exampleVector2);
 // Vector2 { x: 5, y: 10 }
 ```
 ## Checks examples
-[Examples](https://github.com/Moderrek/JSGL/tree/release/examples/);
+[Examples](https://github.com/Moderrek/JSGL/tree/release/examples/)

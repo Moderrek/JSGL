@@ -6,17 +6,23 @@ import { GameObject } from "./GameObject";
  * @group Game Objects
  */
 export class DrawableGameObject extends GameObject {
+    
     /**
-     * Is game object visible?
+     * Defines is this game object visible in game.
+     * @property
      */
-    visible: boolean = true;
+    public visible: boolean = true;
 
-    /** 
+    /**
      * Invoked at frame when drawing
+     * @method
+     * @param event - {@link DrawEvent}
      * @virtual
+     * @example
+     * OnDraw(event){
+     *  event.renderer.drawRectangle(0, 0, 1, 1);
+     * }
      */
-    OnDraw(event: DrawEvent){
-
-    }
+    public OnDraw(event: DrawEvent){}
 
 }

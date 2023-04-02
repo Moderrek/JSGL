@@ -9,10 +9,10 @@ import { ClickableGameObject } from "./ClickableGameObject";
  */
 export class Shape extends ClickableGameObject {
     
-    type: ShapeType = ShapeType.Rect;
-    properties: DrawSettings = Object.create(defaultDrawSettings);
+    public type: ShapeType = ShapeType.Rect;
+    public properties: DrawSettings = Object.create(defaultDrawSettings);
 
-    override OnDraw(event: DrawEvent){
+    public override OnDraw(event: DrawEvent){
         if(this.type === ShapeType.Rect){
             event.renderer.drawRectangle(
                 this.transform.position.x,

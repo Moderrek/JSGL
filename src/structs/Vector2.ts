@@ -1,22 +1,26 @@
-import { IsInRange } from "../utils/math/MathUtils";
+import { IsInRange, Lerp, floor } from "../utils/math/MathUtils";
 
 /** @group Structs */
 export class Vector2{
+    
     /**
-     * X-coordinate
+     * X component of vector.
+     * @property
      */
-    x: number;
+    public x: number;
     /**
-     * Y-coordinate
+     * Y component of vector.
+     * @property
      */
-    y: number;
+    public y: number;
 
     /**
-     * Constructs a new Vector2 with the given coordinates.
-     * @param {number} x X-coordinate
-     * @param {number} y Y-coordinate
+     * Constructs a new Vector2 with the given components.
+     * @param x - X component
+     * @param y - Y component
+     * @constructor
      */
-    constructor(x: number = 0, y: number = 0){
+    public constructor(x: number = 0, y: number = 0){
         if(typeof x !== 'number')
             throw new Error("X must be an number!");
         if(typeof y !== 'number')
@@ -25,152 +29,297 @@ export class Vector2{
         this.y = y;
     }
 
-    static IsPointIn(min: Vector2, max: Vector2, point: Vector2){
+    // Static Methods
+
+    /**
+     * Performs Linear Interpolation on Vectors2 with given decimal midpoint
+     * @method
+     * @param a - The first Vector2
+     * @param b - The second Vector2
+     * @param c - The decimal midpoint
+     * @returns Vector2 after Linear Interpolation.
+     * @example
+     * const a = new JSGL.Vector2(3, 9);
+     * const b = new JSGL.Vector2(5, 2);
+     * JSGL.Vector2.Lerp(a, b, 0); // (3, 9)
+     * JSGL.Vector2.Lerp(a, b, 0.5); // (4, 5.5)
+     * JSGL.Vector2.Lerp(a, b, 1); // (5, 2)
+     */
+    public static Lerp(a: Vector2, b: Vector2, c: number = 0): Vector2{
+        return new Vector2(Lerp(a.x, b.x, c), Lerp(a.y, b.y, c));
+    }
+    /**
+     * Returns the new Vector2 with maximum X and Y coordinates from first and second Vector2
+     * @method
+     * @param a - The first Vector2
+     * @param b - The second Vector2
+     * @returns The new Vector2 with maximum X and Y
+     * @example
+     * const a = new JSGL.Vector2(3, 9);
+     * const b = new JSGL.Vector2(5, 2);
+     * const max = JSGL.Vector2.Max(a, b); // (5, 9)
+     */
+    public static Max(a: Vector2, b: Vector2): Vector2{
+        return new Vector2(Math.max(a.x, b.x), Math.max(a.y, b.y)); 
+    }
+    /**
+     * Returns the new Vector2 with minimum X and Y coordinates from first and second Vector2
+     * @method
+     * @param a - The first Vector2
+     * @param b - The second Vector2
+     * @returns The new Vector2 with minimum X and Y
+     * @example
+     * const a = new JSGL.Vector2(3, 9);
+     * const b = new JSGL.Vector2(5, 2);
+     * const min = JSGL.Vector2.Min(a, b); // (3, 2)
+     */
+    public static Min(a: Vector2, b: Vector2): Vector2{
+        return new Vector2(Math.min(a.x, b.x), Math.min(a.y, b.y));
+    }
+    /**
+     * Returns is `point` between given 2D range.
+     * @method
+     * @param min - The minimal range
+     * @param max - The maximum range
+     * @param point - The point
+     * @returns is `point` between range.
+     * @example
+     * const min = new JSGL.Vector2(5, 5);
+     * const max = new JSGL.Vector2(7, 7);
+     * JSGL.Vector2.IsPointIn(min, max, new JSGL.Vector2(6, 5));
+     */
+    public static IsPointIn(min: Vector2, max: Vector2, point: Vector2): boolean{
         return IsInRange(point.x, min.x, max.x) && IsInRange(point.y, min.y, max.y);
     }
 
     /**
-     * Sets the x-coordinate.
-     * @param {number} x new X-coordinate value
-     * @returns {Vector2}
+     * Returns true if two vectors are equal.
+     * @method
+     * @param v - The first Vector2
+     * @param v2 - The second Vector2
+     * @returns are vectors equal
+     * @example
+     * const vector1 = new JSGL.Vector2(2, 4);
+     * const vector2 = new JSGL.Vector2(2, 4);
+     * JSGL.Vector2.Equal(vector1, vector2);
      */
-    setX(x: number): Vector2{
-        if(typeof x !== 'number')
-            throw new Error("X must be an number!");
-        this.x = x;
+    public static Equal(v?: Vector2, v2?: Vector2): boolean{
+        if(v === undefined || v2 === undefined)
+            return false;
+        if(!(v instanceof Vector2) || !(v2 instanceof Vector2))
+            return false;
+        return v.x === v2.x && v.y === v2.y;
+    }
+
+    // Accesors
+
+    /**
+     * @returns (0, 0)
+     */
+    public static get zero(){
+        return new Vector2(0, 0);
+    }
+    /**
+     * @returns (1, 1)
+     */
+    public static get one(){
+        return new Vector2(1, 1);
+    }
+    /**
+     * @returns (0, 1)
+     */
+    public static get up(){
+        return new Vector2(0, 1);
+    }
+    /**
+     * @returns (0, -1)
+     */
+    public static get down(){
+        return new Vector2(0, -1);
+    }
+    /**
+     * @returns (1, 0)
+     */
+    public static get right(){
+        return new Vector2(1, 0);
+    }
+    /**
+     * @returns (-1, 0)
+     */
+    public static get left(){
+        return new Vector2(-1, 0);
+    }
+
+    public get magnitude(){
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
+
+    // Instance Methods
+    /**
+     * Sets components to given Vector2 or X, Y.
+     * @method
+     * @param x - The Vector2 or X-coordinate 
+     * @param y - The Y-coordinate (if `x` isn't Vector2)
+     * @returns This reference
+     * @example
+     * vector2.set(exampleVector);
+     * vector2.set(x, y);
+     */
+    public set(x: number | Vector2, y?: number): Vector2{
+        if(x === undefined)
+            return this;
+        if(x instanceof Vector2){
+            this.x = x.x;
+            this.y = x.y;
+        }else if(typeof x === 'number'){
+            this.x = x;
+            if(y !== undefined && typeof y === 'number'){
+                this.y = y;
+            }else{
+                this.y = 0;
+            }
+        }
         return this;
     }
 
     /**
-     * Sets the y-coordinate.
-     * @param {number} y new Y-coordinate value
-     * @returns {Vector2}
+     * Adds given Vector2 or X, Y to this Vector2 components.
+     * @method
+     * @param x - The Vector2 or X-coordinate 
+     * @param y - The Y-coordinate (if `x` isn't Vector2)
+     * @returns This reference
+     * @example
+     * vector2.add(exampleVector);
+     * vector2.add(x, y);
      */
-    setY(y: number): Vector2{
-        if(typeof y !== 'number')
-            throw new Error("Y must be an number!");
-        this.y = y;
+    public add(x: number | Vector2, y?: number): Vector2{
+        if(x instanceof Vector2){
+            this.x += x.x;
+            this.y += x.y;
+        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+            this.x += x;
+            this.y += y;
+        }
         return this;
     }
 
     /**
-     * Gets the x-coordinate.
-     * @returns {number}
+     * Substracts given Vector2 or X, Y to this Vector2 components.
+     * @method
+     * @param x - The Vector2 or X-coordinate 
+     * @param y - The Y-coordinate (if `x` isn't Vector2)
+     * @returns This reference
+     * @example
+     * vector2.subtract(exampleVector);
+     * vector2.subtract(x, y);
      */
-    getX(): number{
-        return this.x;
-    }
-
-    /**
-     * Gets the y-coordinate.
-     * @returns {number}
-     */
-    getY(): number{
-        return this.y;
-    }
-
-    /**
-     * Adds the X-coordinate by param.
-     * @param {number} x param
-     * @returns {Vector2}
-     */
-    addX(x: number): Vector2{
-        if(typeof x !== 'number')
-            throw new Error("X must be an number!");
-        this.x += x;
+    public subtract(x: number | Vector2, y?: number): Vector2{
+        if(x instanceof Vector2){
+            this.x -= x.x;
+            this.y -= x.y;
+        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+            this.x -= x;
+            this.y -= y;
+        }
         return this;
     }
 
     /**
-     * Adds the Y-coordinate by param.
-     * @param {number} y param
-     * @returns {Vector2}
+     * Multiplies component by scalar or Vector2.
+     * @method
+     * @param x - The Vector2 or scalar
+     * @returns This reference
+     * @example
+     * vector2.multiply(exampleVector);
+     * vector2.multiply(scalar);
      */
-    addY(y: number): Vector2{
-        if(typeof y !== 'number')
-            throw new Error("Y must be an number!");
-        this.y += y;
+    public multiply(x: number | Vector2): Vector2{
+        if(x instanceof Vector2){
+            this.x *= x.x;
+            this.y *= x.y;
+        }else if(typeof x === 'number'){
+            this.x *= x;
+            this.y *= x;
+        }
         return this;
     }
 
     /**
-     * Adds the vector by another.
-     * @param {Vector2} v The another vector
-     * @returns {Vector2}
+     * Divides component by scalar or Vector2.
+     * @method
+     * @param x - The Vector2 or scalar
+     * @returns This reference
+     * @example
+     * vector2.divide(exampleVector);
+     * vector2.multipdividely(scalar);
      */
-    add(v: Vector2): Vector2{
-        if(!(v instanceof Vector2))
-            throw new Error("V must be an Vector2!");
-        this.x += v.x;
-        this.y += v.y;
+    public divide(x: number | Vector2): Vector2{
+        if(x instanceof Vector2){
+            this.x /= x.x;
+            this.y /= x.y;
+        }else if(typeof x === 'number'){
+            this.x /= x;
+            this.y /= x;
+        }
         return this;
     }
 
     /**
-     * Performs subtraction components from the other vector components.
-     * @param {Vector2} v The other vector
-     * @returns {Vector2}
+     * Returns distance between Vector2 or X, Y coordinate.
+     * @method
+     * @param x - The Vector2 or X-coordinate
+     * @param y - The Y-coordinate (if `x` isn't Vector2)
+     * @returns The distance between vectors
+     * @example
+     * vector2.distance(exampleVector);
+     * vector2.distance(0, 0); 
      */
-    subtract(v: Vector2): Vector2{
-        if(!(v instanceof Vector2))
-            throw new Error("V must be an Vector2!");
-        this.x -= v.x;
-        this.y -= v.y;
-        return this;
+    public distance(x: number | Vector2, y?: number): number{
+        if(x instanceof Vector2){
+            return Math.sqrt(Math.pow(Math.abs(this.x - x.x), 2) + Math.pow(Math.abs(this.y - x.y), 2));
+        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+            return Math.sqrt(Math.pow(Math.abs(this.x - x), 2) + Math.pow(Math.abs(this.y - y), 2));
+        }
+        throw new Error("Invalid params!");
     }
 
     /**
-     * Performs scalar multiplication, multiplying all components with scalar.
-     * @param {number} m Scalar
-     * @returns {Vector2}
-     */
-    multiply(m: number): Vector2{
-        if(typeof m !== 'number')
-            throw new Error("Scalar must be an number!");
-        this.x *= m;
-        this.y *= m;
-        return this;
-    }
-
-    /**
-     * Performs scalar divination, dividing all components with scalar.
-     * @param {number} d Scalar
-     * @returns {Vector2}
-     */
-    divide(d: number): Vector2{
-        if(typeof d !== 'number')
-            throw new Error("Scalar must be an number!");
-        this.x /= d;
-        this.y /= d;
-        return this;
-    }
-
-    /**
-     * Gets the distance between this vector and another.
-     * @param {Vector2} v The other vector.
-     * @returns {number} The distance
-     */
-    distance(v: Vector2): number{
-        if(!(v instanceof Vector2))
-            throw new Error("V must be an Vector2!");
-        return Math.sqrt(Math.pow(Math.abs(this.x - v.x), 2) + Math.pow(Math.abs(this.y - v.y), 2));
-    }
-
-    /**
-     * Floors the X, Y coordinates.
+     * Floors the X, Y components.
+     * @method
      * @returns The reference
+     * @example
+     * vector2.floor();
      */
-    floor(): Vector2{
-        this.x = Math.floor(this.x);
-        this.y = Math.floor(this.y);
+    public floor(): Vector2{
+        this.x = floor(this.x);
+        this.y = floor(this.y);
         return this;
+    }
+
+    /**
+     * Returns true if two vectors are equal.
+     * @method
+     * @param v - The second Vector2
+     * @returns are vectors equal
+     * @example
+     * const vector1 = new JSGL.Vector2(2, 4);
+     * const vector2 = new JSGL.Vector2(2, 4);
+     * vector1.equal(vector2);
+     */
+    public equal(v?: Vector2): boolean{
+        if(v === undefined)
+            return false;
+        if(!(v instanceof Vector2))
+            return false;
+        return this.x === v.x && this.y === v.y;
     }
 
     /**
      * Clones the Vector2.
+     * @method
      * @returns The clone
      */
-    clone(): Vector2{
+    public clone(): Vector2{
         return new Vector2(this.x, this.y);
     }
 

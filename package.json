@@ -2,7 +2,7 @@
   "name": "@moderrkowo/jsgl",
   "displayName": "JSGL",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publisher": "Tymon Woźniak",
   "main": "./dist/index.js",
   "homepage": "https://jsglreference.pl/",
@@ -29,11 +29,12 @@
     "library"
   ],
   "scripts": {
-    "build": "webpack --mode=production --node-env=production && tsc",
+    "build:types": "tsc",
+    "docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator",
+    "build": "npm run build:prod && npm run build:types && npm run docs",
     "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production && tsc",
-    "watch": "webpack --watch",
-    "docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator"
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
