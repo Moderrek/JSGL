@@ -1,14 +1,15 @@
 import { Vector2 } from "./Vector2";
 import { Clamp } from '../utils/math/MathUtils';
+import { Rotation, RotationType } from './Rotation';
 
-/** @group Structs */
 export class Transform{
+    
     /** Position */
-    position;
+    public position: Vector2;
     /** Width and height */
-    scale;
-    /** Rotation in degrees */
-    rotation;
+    public scale: Vector2;
+    /** Rotation */
+    public rotation: Rotation;
 
     /**
      * Constructs new Transform
@@ -21,9 +22,36 @@ export class Transform{
     constructor(posX: number, posY: number, scaleX: number, scaleY: number, rotation: number = 0) {
         this.position = new Vector2(posX, posY);
         this.scale = new Vector2(scaleX, scaleY);
-        this.rotation = rotation;
+        this.rotation = new Rotation({ type: RotationType.DEGREES, value: rotation });
     }
 
+    // Rotation
+
+    /**
+     * Gets rotation in radians.
+     */
+    public get angles(): number{
+        return this.rotation.angles;
+    }
+    /**
+     * Sets rotation in radians.
+     */
+    public set angles(radians: number){
+        this.rotation.angles = radians;
+    }
+    /**
+     * Gets rotation in degrees.
+     * @property
+     */
+    public get eulerAngles(): number {
+        return this.rotation.eulerAngles;
+    }
+    /**
+     * Sets rotation in degrees.
+     */
+    public set eulerAngles(degrees: number) {
+        this.rotation.eulerAngles = degrees;
+    }
     /**
      * Gets the Vector2 of center position.
      * @returns The center position
@@ -33,20 +61,32 @@ export class Transform{
         const y = this.position.y + ( this.scale.y / 2);
         return new Vector2(x, y);
     }
-
     /**
-     * @beta
+     * Gets forward Vector2
+     * @property
      */
-    bounce(){
-        if(this.rotation >= 180){
-            this.rotation += 180;
-        }else{
-            this.rotation -= 180;
-        }
+    public get forward(): Vector2{
+        return new Vector2(Math.cos(this.rotation.angles), Math.sin(this.rotation.angles));
+    }
+    /**
+     * Gets backward Vector2
+     * @property
+     */
+    public get backward(): Vector2{
+        return this.forward.multiply(-1);
     }
 
     /**
      * @beta
+     * @method
+     */
+    bounce(){
+        this.rotation.eulerAngles += 180;
+    }
+
+    /**
+     * @beta
+     * @method
      * @param grid Game canvas grid setting 
      */
     ifOnEdgeBounce(grid: Vector2){
@@ -58,174 +98,110 @@ export class Transform{
         }
     }
 
-    /**
-     * Gets the normalized rotation degrees
-     * @returns 
-     */
-    getRotation(): number{
-        this.normalizeRotation();
-        return this.rotation;
+    public set(x: number | Vector2, y?: number){
+        if(x === undefined)
+            return;
+        if(x instanceof Vector2){
+            // Vector2 set
+            this.position.x = x.x;
+            this.position.y = x.y;
+        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+            // x, y set
+            this.position.x = x;
+            this.position.y = y;
+        }
     }
-    /**
-     * @param value The rotation degrees value.
-     */
-    setRotation(value: number){
-        this.rotation = value;
-        this.normalizeRotation();
+    public setX(x: number | Vector2){
+        if(x === undefined)
+            return;
+        if(x instanceof Vector2){
+            this.position.x = x.x;
+        }else if(typeof x === 'number'){
+            this.position.x = x;
+        }
     }
-    
-    /**
-     * Rotates by given rotate.
-     * @param value The rotate in degrees
-     */
-    rotate(value: number){
-        this.rotation += value;
-        this.normalizeRotation();
-    }
-    /**
-     * Normalizes rotation
-     */
-    normalizeRotation(){
-        if(this.rotation >= 360)
-            this.rotation = this.rotation % 360;
-    }
-    /**
-     * Gets the radians
-     * @returns The radians of actual rotation
-     */
-    getRadians(): number{
-        this.normalizeRotation();
-        return this.rotation * Math.PI / 180;
+    public setY(y: number | Vector2){
+        if(y === undefined)
+            return;
+        if(y instanceof Vector2){
+            this.position.y = y.y;
+        }else if(typeof y === 'number'){
+            this.position.y = y;
+        }
     }
 
     /**
-     * Gets width and height Vector2.
-     * @returns The Vector2
+     * Repositions X-coordinate and Y-coordinate.
+     * @method
+     * @param x - Vector2 or X-coordinate
+     * @param y - Optional Y-coordinate
+     * @example
+     * const vector2 = new JSGL.Vector2(5, 2);
+     * transform.translate(vector2);
+     * 
+     * transform.translate(5, 2);
      */
-    getScale(): Vector2{
-        return this.scale;
+    public translate(x: number | Vector2, y?: number){
+        if(x === undefined)
+            return;
+        if(x instanceof Vector2){
+            // Vector2 translate
+            this.position.x += x.x;
+            this.position.y += x.y;
+        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+            // x, y translate
+            this.position.x += x;
+            this.position.y += y;
+        }
     }
 
     /**
-     * Gets Transform width
-     * @returns The width
+     * Repositions X-coordinate.
+     * @method
+     * @param x - Vector2 or X-coordinate
+     * @example
+     * const vector2 = new JSGL.Vector2(5, 2);
+     * transform.translateX(vector2);
+     * 
+     * transform.translateX(5);
      */
-    getScaleX(): number{
-        return this.scale.x;
-    }
-    /**
-     * Sets new Transform width
-     * @param x The new width
-     * @returns This reference
-     */
-    setScaleX(x: number){
-        this.scale.x = x;
-        return this;
-    }
-    /**
-     * Gets Transform height
-     * @returns The height
-     */
-    getScaleY(){
-        return this.scale.y;
-    }
-    /**
-     * Sets new Transform height
-     * @param y The new height
-     * @returns This reference
-     */
-    setScaleY(y: number){
-        this.scale.y = y;
-        return this;
+    public translateX(x: number | Vector2){
+        if(x === undefined)
+            return;
+        if(x instanceof Vector2){
+            this.position.x += x.x;
+        }else if(typeof x === 'number'){
+            this.position.x += x;
+        }
     }
 
     /**
-     * Gets position
-     * @returns The Vector2
+     * Repositions Y-coordinate.
+     * @method
+     * @param y - Vector2 or Y-coordinate
+     * @example
+     * const vector2 = new JSGL.Vector2(5, 2);
+     * transform.translateY(vector2);
+     * 
+     * transform.translateY(2);
      */
-    getPosition(){
-        return this.position;
-    }
-    /**
-     * Gets X-coordinate
-     * @returns The X-coordinate
-     */
-    getX(){
-        return this.position.x;
-    }
-    /**
-     * Sets new X-coordinate
-     * @param x The new X-coordinate
-     * @returns This reference
-     */
-    setX(x: number){
-        this.position.x = x;
-        return this;
-    }
-    /**
-     * Adds Vector2 values to this position
-     * @param v The Vector2
-     * @returns This reference
-     */
-    add(v: Vector2){
-        this.position.x += v.x;
-        this.position.y += v.y;
-        return this;
-    }
-    addX(x: number){
-        this.position.x += x;
-        return this;
-    }
-    getY() {
-        return this.position.y;
-    }
-    setY(y: number){
-        this.position.y = y;
-        return this;
-    }
-    addY(y: number){
-        this.position.y += y;
-        return this;
+    public translateY(y: number | Vector2){
+        if(y === undefined)
+            return;
+        if(y instanceof Vector2){
+            this.position.y += y.y;
+        }else if(typeof y === 'number'){
+            this.position.y += y;
+        }
     }
 
     /**
-     * Sets new position by param.
-     * @param v The new position.
-     */
-    setPostition(v: Vector2){
-        this.position.x = v.x;
-        this.position.y = v.y;
-    }
-
-    /**
-     * Sets new position by param.
-     * @param v The new position.
-     */
-    goTo(v: Vector2){
-        this.setPostition(v);
-    }
-
-    
-
-    /**
-     * Moves Transform by Vector2 in actual direction
-     * @param v The Vector2
-     */
-    move(v: Vector2){
-        if(!(v instanceof Vector2))
-            throw new Error("To move game object param must be Vector2!");
-        this.position.x += v.x * Math.cos(this.getRadians());
-        this.position.y += v.y * Math.sin(this.getRadians());
-    }
-
-    
-
-    /**
-     * Clones object
+     * Clones Transform and returns new object.
+     * @method
      * @returns The cloned object
      */
     clone(): Transform{
-        return new Transform(this.position.x, this.position.y, this.scale.x, this.scale.y, this.rotation);
+        return new Transform(this.position.x, this.position.y, this.scale.x, this.scale.y, this.rotation.eulerAngles);
     }
 
 }

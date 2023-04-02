@@ -1,5 +1,5 @@
 import { Game, GameSettings, defaultGameSettings } from "../Game";
-import { ExampleHTML, ExampleHTMLProperties } from "./ExampleHTML";
+import { ExampleHTML, ExampleHTMLProperties, exampleHTMLDefaultProperties } from './ExampleHTML';
 
 /** 
  * Helps with creating game page.
@@ -8,8 +8,16 @@ import { ExampleHTML, ExampleHTMLProperties } from "./ExampleHTML";
 export class DefaultGame {
 
     static Create(gameProps?: GameSettings, pageProps?: ExampleHTMLProperties, canvasSize: number = 1): Game{
+        pageProps = {...exampleHTMLDefaultProperties, ...pageProps};
         ExampleHTML.Render(pageProps);
-        const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
+        if(!(pageProps.document instanceof Document)){
+            if(document instanceof Document){
+                pageProps.document = document;
+            }else{
+                throw new Error("Default DOM cannot be assigned! Please assign document to 'document' property");
+            }
+        }
+        const canvas = pageProps.document.getElementById("gameCanvas") as HTMLCanvasElement;
         if(canvas === undefined)
             throw new Error("Cannot get canvas!");
         const gameSettings = {...defaultGameSettings, ...gameProps};

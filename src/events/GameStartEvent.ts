@@ -1,4 +1,6 @@
 import { GameEvent } from './GameEvent';
 
-/** @group Game Events */
+/** 
+ * @group Game Events
+ */
 export interface GameStartEvent extends GameEvent {}

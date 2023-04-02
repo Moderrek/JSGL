@@ -1,5 +1,5 @@
 const path = require('path');
-
+// const { version } = require('./package.json');
 const isProduction = process.env.NODE_ENV == 'production';
 
 const config = {
@@ -7,15 +7,15 @@ const config = {
         "JSGL": path.resolve(__dirname, 'src/index.ts')
     },
     output: {
+        asyncChunks: true,
         path: path.resolve(__dirname, 'dist'),
-        chunkFilename: '[name].js',
-        filename: '[name].js',
+        chunkFilename: `[name]-[id].js`,
+        filename: `[name].js`,
         library: '[name]',
         libraryTarget: 'umd',
         clean: true
     },
     resolve: { extensions: ['.ts'] },
-    plugins: [],
     module: {
         rules: [
             {

@@ -7,37 +7,46 @@ import { GameObjectSpawnEvent } from "../events/gameobject/GameObjectSpawnEvent"
 /**
  * Represents plain GameObject
  * @group Game Objects
+ * @author Tymon Woźniak
+ * @class
  */
 export class GameObject {
     /**
-     * Unique game object id
+     * The unique id of this game object.
+     * @property
      */
-    readonly id: string;
+    public readonly id: string;
     /**
-     * Is enabled
+     * Defines is this game object enabled in game.
+     * @property
      */
-    enabled: boolean;
+    public enabled: boolean;
     /**
-     * Game object name
+     * The name of this game object.
+     * @property
      */
-    name: string | undefined;
+    public name: string | undefined;
     /**
-     * Game object tag
+     * The tag of this game object.
+     * @property
      */
-    tag: string | undefined;
+    public tag: string | undefined;
     /**
-     * Sorting order
+     * The order in game objects hierarchy.
+     * @property
      */
-    sortingOrder: number;
+    public sortingOrder: number;
     /**
-     * Transform - position, width, height and rotation of game object
+     * The Transform - position, width, height and rotation of this game object.
+     * @property
      */
-    transform: Transform;
+    public transform: Transform;
 
     /**
-     * Constructs new GameObject
+     * Constructs new GameObject.
+     * @constructor
      */
-    constructor(){
+    public constructor(){
         this.id = crypto.getRandomValues(new Uint32Array(4)).join('-');
         this.enabled = true;
         this.name = undefined;
@@ -47,24 +56,48 @@ export class GameObject {
     }
 
     /**
-     * Invoked at game object spawn
-     *  @virtual
+     * Invoked at game object spawn.
+     * @method
+     * @param event - {@link GameObjectSpawnEvent}
+     * @virtual
+     * @example
+     * Start(event){
+     *  console.log('I have been spawned!');
+     * }
      */
-    OnStart(event: GameObjectSpawnEvent){}
+    public Start(event: GameObjectSpawnEvent){}
     /** 
-     * Invoked at game object destroy
+     * Invoked at game object destroy.
+     * @method
+     * @param event - {@link GameObjectDestroyEvent}
      * @virtual
+     * @example
+     * Destroy(event){
+     *  console.log('I have been destroyed!');
+     * }
      */
-    OnDestroy(event: GameObjectDestroyEvent){}
+    public Destroy(event: GameObjectDestroyEvent){}
     /**
-     * Invoked at every frame
+     * Invoked at every frame.
+     * @method
+     * @param event - {@link TickEvent}
      * @virtual
+     * @example
+     * Update(event){
+     *  this.transform.translate(new JSGL.Vector2(1, 0).multiply(event.deltaTime));
+     * }
      */
-    Update(event: TickEvent){}
+    public Update(event: TickEvent){}
     /**
-     * Invoked at last update in every frame
+     * Invoked at last update in every frame.
+     * @method
+     * @param event - {@link TickEvent}
      * @virtual
+     * @example
+     * Update(event){
+     *  this.transform.translate(new JSGL.Vector2(1, 0).multiply(event.deltaTime));
+     * }
      */
-    FixedUpdate(event: TickEvent){}
+    public FixedUpdate(event: TickEvent){}
 
 }

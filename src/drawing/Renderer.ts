@@ -5,6 +5,7 @@ import { DrawSettings, defaultDrawSettings } from './DrawSettings';
 import { ClickableGameObject } from '../gameobjects/ClickableGameObject';
 import { Clamp01 } from '../utils/math/MathUtils';
 import { RotationStyle } from '../enums/RotationStyle';
+import { Rotation } from '../structs/Rotation';
 
 /**
  * Class represents Game Renderer.
@@ -32,7 +33,10 @@ export class Renderer {
     }
 
     /**
-     * Resize canvas to parent element size by canvasParentSize (decimal midpoint).
+     * Resizes canvas to parent element size by canvasParentSize (decimal midpoint).
+     * @method
+     * @example
+     * renderer.resizeCanvas();
      */
     resizeCanvas(){
         if(!(this.handler.canvas instanceof HTMLCanvasElement))
@@ -100,36 +104,23 @@ export class Renderer {
 
     /**
      * Scales number from client coordinate to grid coordinate.
-     * @param x The client coordinate
+     * @method
+     * @param x - The client coordinate
      * @returns The scaled number
+     * @example
+     * const scaledToGrid = renderer.scale(5);
      */
     scale(x: number): number{
         return x * this.gridSize;
     }
 
     /**
-     * Converts degrees to radians.
-     * @param degrees The degrees
-     * @returns The radians
-     */
-    private radians(degrees: number): number{
-        degrees %= 360;
-        return degrees * Math.PI / 180;
-    }
-
-    /**
-     * Converts radians to degrees.
-     * @param radians The radians
-     * @returns The degrees
-     */
-    private degrees(radians: number): number{
-        return radians / Math.PI * 180;
-    }
-
-    /**
      * Combines given draw settings with default draw settings.
-     * @param drawSettings The given draw settings 
+     * @method
+     * @param drawSettings - The given draw settings 
      * @returns The combined draw settings
+     * @example
+     * const drawSettings = renderer.combineDrawSettings({ color: 'red' });
      */
     private combineDrawSettings(drawSettings: DrawSettings | undefined): DrawSettings{
         return { ...defaultDrawSettings, ...drawSettings };
@@ -137,7 +128,7 @@ export class Renderer {
 
     /**
      * Sets canvas context properties to given settings.
-     * @param drawSettings The draw settings
+     * @param drawSettings - The draw settings
      */
     private setContextSettings(drawSettings: DrawSettings){
         if(drawSettings.color !== undefined)
@@ -160,23 +151,26 @@ export class Renderer {
 
     /**
      * Draws a rect.
-     * @param x The X-coordinate
-     * @param y The Y-coordinate
-     * @param width The width
-     * @param height The height
-     * @param drawSettings The draw settings
+     * @method
+     * @param worldX - The X-coordinate
+     * @param worldY - The Y-coordinate
+     * @param worldWidth - The width
+     * @param worldHeight - The height
+     * @param drawSettings - The draw settings
+     * @example
+     * renderer.drawRectangle(5, 2, 1, 1, { color: 'green', border: true });
      */
-    drawRectangle(x: number, y: number, width: number, height: number, drawSettings?: DrawSettings){
+    drawRectangle(worldX: number, worldY: number, worldWidth: number, worldHeight: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
-        const dx = this.scale(x);
-        const dy = this.scale(y);
-        const dw = this.scale(width);
-        const dh = this.scale(height);
+        const dx = this.scale(worldX);
+        const dy = this.scale(worldY);
+        const dw = this.scale(worldWidth);
+        const dh = this.scale(worldHeight);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
         if(drawSettings.angle !== undefined){
             if(drawSettings.rotationStyle === RotationStyle.allAround){
-                this.ctx.rotate(this.radians(drawSettings.angle));
+                this.ctx.rotate(Rotation.ToRadians(drawSettings.angle));
             }
         }
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
@@ -192,15 +186,18 @@ export class Renderer {
 
     /**
      * Draws a circle.
-     * @param x The X-coordinate
-     * @param y The Y-coordinate
-     * @param diameter The diameter
-     * @param drawSettings The draw settings
+     * @method
+     * @param worldX - The X-coordinate
+     * @param worldY - The Y-coordinate
+     * @param diameter - The diameter
+     * @param drawSettings - The draw settings
+     * @example
+     * renderer.drawCircle(0, 0, 1, { color: 'yellow' });
      */
-    drawCircle(x: number, y: number, diameter: number, drawSettings?: DrawSettings){
+    drawCircle(worldX: number, worldY: number, diameter: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
-        const dx = this.scale(x);
-        const dy = this.scale(y);
+        const dx = this.scale(worldX);
+        const dy = this.scale(worldY);
         const dr = this.scale(diameter / 2);
         this.setContextSettings(drawSettings);
         //
@@ -215,38 +212,44 @@ export class Renderer {
 
     /**
      * Draws line from position to another position.
-     * @param x1 From X-coordinate
-     * @param y1 From Y-coordinate
-     * @param x2 To X-coordinate
-     * @param y2 To Y-coordinate
-     * @param drawSettings The draw settings
+     * @method
+     * @param fromWorldX - From X-coordinate
+     * @param fromWorldY - From Y-coordinate
+     * @param toWorldX - To X-coordinate
+     * @param toWorldY - To Y-coordinate
+     * @param drawSettings - The draw settings
+     * @example
+     * renderer.drawLine(2, 3, 3, 4);
      */
-    drawLine(x1: number, y1: number, x2: number, y2: number, drawSettings?: DrawSettings){
+    drawLine(fromWorldX: number, fromWorldY: number, toWorldX: number, toWorldY: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
         this.setContextSettings(drawSettings);
         this.ctx.beginPath();
-        this.ctx.moveTo(this.scale(x1), this.scale(y1));
-        this.ctx.lineTo(this.scale(x2), this.scale(y2));
+        this.ctx.moveTo(this.scale(fromWorldX), this.scale(fromWorldY));
+        this.ctx.lineTo(this.scale(toWorldX), this.scale(toWorldY));
         this.ctx.closePath();
         this.ctx.stroke();
     }
 
     /**
      * Draws arrow from position to another position.
-     * @param x1 From X-coordinate
-     * @param y1 From Y-coordinate
-     * @param x2 To X-coordinate
-     * @param y2 To Y-coordinate
-     * @param drawSettings The draw settings
+     * @method
+     * @param fromWorldX - From X-coordinate
+     * @param fromWorldY - From Y-coordinate
+     * @param toWorldX - To X-coordinate
+     * @param toWorldY - To Y-coordinate
+     * @param drawSettings - The draw settings
+     * @example
+     * renderer.drawArrow(2, 3, 3, 4);
      */
-    drawArrow(x1: number, y1: number, x2: number, y2: number, drawSettings?: DrawSettings) {
+    drawArrow(fromWorldX: number, fromWorldY: number, toWorldX: number, toWorldY: number, drawSettings?: DrawSettings) {
         drawSettings = this.combineDrawSettings(drawSettings);
         // Scaling
         const size = this.gridSize / 16;
         this.ctx.lineWidth = this.gridSize / 64;
         this.setContextSettings(drawSettings);
-        const p1 = new Vector2(x1 * this.gridSize, y1 * this.gridSize);
-        const p2 = new Vector2(x2 * this.gridSize, y2 * this.gridSize);
+        const p1 = new Vector2(fromWorldX * this.gridSize, fromWorldY * this.gridSize);
+        const p2 = new Vector2(toWorldX * this.gridSize, toWorldY * this.gridSize);
         // Angle
         const angle = Math.atan2((p2.y - p1.y) , (p2.x - p1.x));
         const hyp = Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
@@ -272,6 +275,9 @@ export class Renderer {
 
     /**
      * Clears the canvas.
+     * @method
+     * @example
+     * renderer.clearFrame();
      */
     clearFrame(){
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -279,7 +285,8 @@ export class Renderer {
 
     /**
      * Fills the canvas with color property from settings.
-     * @param drawSettings The settings
+     * @param drawSettings - The settings
+     * @deprecated
      */
     fillFrame(drawSettings: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
@@ -289,32 +296,58 @@ export class Renderer {
 
     /**
      * Fills canvas with image.
-     * @param image The image
+     * @param image - The image
+     * @deprecated
      */
     fillImageFrame(image: HTMLCanvasElement){
         this.ctx.drawImage(image, 0, 0, this.canvasWidth, this.canvasHeight);
     }
 
     /**
-     * Draws image.
-     * @param image The image 
-     * @param x The X-coordinate
-     * @param y The Y-coordinate
-     * @param width The width
-     * @param height The height
-     * @param drawSettings The draw settings
+     * Fills canvas with content.
+     * @method
+     * @param content - The color, image or {@link DrawSettings}
+     * @example
+     * renderer.fill('white');
+     * renderer.fill({ color: 'white' })
+     * renderer.fill(game.GetImage('background'));
      */
-    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number, drawSettings?: DrawSettings){
+    fill(content: string | DrawSettings | HTMLCanvasElement){
+        if(content instanceof HTMLCanvasElement){
+            this.setContextSettings(defaultDrawSettings);
+            this.ctx.drawImage(content, 0, 0, this.canvasWidth, this.canvasHeight);
+            return;
+        }else if(typeof content === 'string'){
+            this.setContextSettings(this.combineDrawSettings({ color: content}));
+        }else{
+            this.setContextSettings(this.combineDrawSettings(content));
+        }
+        this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+    }
+
+    /**
+     * Draws image.
+     * @method
+     * @param image - The image 
+     * @param worldX - The X-coordinate
+     * @param worldY - The Y-coordinate
+     * @param worldWidth - The width
+     * @param worldHeight - The height
+     * @param drawSettings - The draw settings
+     * @example
+     * renderer.drawImage(game.GetImage('player'), 0, 0, 1, 1, { angle: 45 });
+     */
+    drawImage(image: HTMLImageElement, worldX: number, worldY: number, worldWidth: number, worldHeight: number, drawSettings?: DrawSettings){
         drawSettings = this.combineDrawSettings(drawSettings);
-        const dx = this.scale(x);
-        const dy = this.scale(y);
-        const dw = this.scale(width);
-        const dh = this.scale(height);
+        const dx = this.scale(worldX);
+        const dy = this.scale(worldY);
+        const dw = this.scale(worldWidth);
+        const dh = this.scale(worldHeight);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
         if(drawSettings.angle !== undefined){
             if(drawSettings.rotationStyle === RotationStyle.allAround){
-                this.ctx.rotate(this.radians(drawSettings.angle));
+                this.ctx.rotate(Rotation.ToRadians(drawSettings.angle));
             }
         }
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
@@ -324,8 +357,12 @@ export class Renderer {
 
     /**
      * Draws sprite texture.
-     * @param sprite The sprite
+     * @method
+     * @param sprite - The sprite
      * @returns is success?
+     * @example
+     * const exampleSprite = ...;
+     * renderer.drawSprite(exampleSprite);
      */
     drawSprite(sprite: Sprite): boolean{
         if(sprite.texture === undefined || sprite.texture === null){
@@ -342,14 +379,18 @@ export class Renderer {
             sprite.transform.position.y,
             sprite.transform.scale.x,
             sprite.transform.scale.y,
-            { angle: sprite.transform.rotation, rotationStyle: sprite.rotationStyle }
+            { angle: sprite.transform.eulerAngles, rotationStyle: sprite.rotationStyle }
         );
         return true;
     }
 
     /**
      * Draws hitbox with direction arrow.
-     * @param clickableObject The clickable game object
+     * @method
+     * @param clickableObject - The clickable game object
+     * @example
+     * const exampleClickableObject = ...;
+     * renderer.drawHitbox(exampleClickableObject);
      */
     drawHitbox(clickableObject: ClickableGameObject){
         if(!clickableObject.showHitbox)
@@ -378,7 +419,7 @@ export class Renderer {
             pos.y + scale.y,
             { borderColor: 'red' }
         );
-        const angle = clickableObject.transform.getRadians();
+        const angle = clickableObject.transform.angles;
         this.drawArrow(
             center.x,
             center.y,

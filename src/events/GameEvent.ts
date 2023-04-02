@@ -1,6 +1,8 @@
 import { Game } from "../Game";
 
-/** @group Game Events */
+/** 
+ * @group Game Events 
+ */
 export interface GameEvent{
     /**
      * Event owner reference

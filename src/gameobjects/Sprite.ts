@@ -13,18 +13,18 @@ export class Sprite extends ClickableGameObject{
     /**
      * Sprite texture
      */
-    texture: HTMLImageElement | undefined;
+    public texture: HTMLImageElement | undefined;
 
     /**
      * Sprite rotation style
      */
-    rotationStyle: RotationStyle = RotationStyle.allAround;
+    public rotationStyle: RotationStyle = RotationStyle.allAround;
 
     /** 
      * Calls `event.game.Update()` at spawn
      * @override
      */
-    override OnStart(event: GameObjectSpawnEvent): void {
+    public override Start(event: GameObjectSpawnEvent): void {
         event.game.Update();
     }
 
@@ -32,7 +32,7 @@ export class Sprite extends ClickableGameObject{
      * Calls sprite render on drawing
      * @override
      */
-    override OnDraw(event: DrawEvent): void {
+    public override OnDraw(event: DrawEvent): void {
         if(this.texture === undefined)
             return;
         if(this.visible){

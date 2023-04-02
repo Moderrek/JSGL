@@ -1,7 +1,10 @@
+/*
+  https://jsglreference.pl/
+ */
 const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(5, 5)}, { backgroundColor: 'black' });
 
 game.on('draw', (event) => {
-    event.renderer.fillFrame({ color: 'white' });
+    event.renderer.fill('white');
 });
 
 game.LoadGameAndStart().then(() => {

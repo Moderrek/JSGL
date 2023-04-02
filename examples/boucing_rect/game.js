@@ -1,3 +1,6 @@
+/*
+  https://jsglreference.pl/
+ */
 const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(25, 25)}, { backgroundColor: 'black' });
 
 game.on('draw', (event) => {
@@ -5,20 +8,17 @@ game.on('draw', (event) => {
 });
 
 class BouncingRect extends JSGL.Shape {
-    OnStart(event){
+    Start(event){
         console.log("Spawned");
-        this.transform.goTo(game.GetRandomPosition());
+        this.transform.set(game.GetRandomPosition());
         this.showHitbox = true;
         this.properties.color = 'black';
-        this.transform.rotate(360 * Math.random());
-        event.game.Update();
+        this.transform.eulerAngles = 360 * Math.random();
     }
     Update(event){
-        const deltaTime = event.deltaTime;
-        this.transform.rotate(45 * deltaTime);
-        this.transform.move(new JSGL.Vector2(5 * deltaTime, 5 * deltaTime));
+        this.transform.eulerAngles += 45 * event.deltaTime;
+        this.transform.translate(new JSGL.Vector2(5, 5).multiply(event.deltaTime).multiply(this.transform.forward));
         this.transform.ifOnEdgeBounce(event.game.grid);
-        event.game.Update();
     }
 }
 
