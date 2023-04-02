@@ -1,7 +1,7 @@
 import { GameObjectSpawnEvent } from '../events/gameobject/GameObjectSpawnEvent';
 import { Sprite } from './Sprite';
 
-/** 
+/**
  * @group Game Objects
  */
 export class SimpleSprite extends Sprite {

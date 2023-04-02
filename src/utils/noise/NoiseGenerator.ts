@@ -1,3 +1,1 @@
-export class NoiseGenerator {
-    
-}
+export class NoiseGenerator {}

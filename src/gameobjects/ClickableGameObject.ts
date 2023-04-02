@@ -1,7 +1,9 @@
-import { GameMouseEvent } from "../events/GameMouseEvent";
-import { DrawableGameObject } from "./DrawableGameObject";
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { GameMouseEvent } from '../events/GameMouseEvent';
+import { DrawableGameObject } from './DrawableGameObject';
 
-/** 
+/**
  * Represents clickable and drawable game object
  * @group Game Objects
  */
@@ -11,12 +13,12 @@ export class ClickableGameObject extends DrawableGameObject {
      * Defines is this game object has hitbox visible in game.
      * @property
      */
-    public showHitbox: boolean = false;
+    public showHitbox = false;
     /**
      * Defines is this game object ignoring mouse events.
      * @property
      */
-    public ignoreRaycast: boolean = false;
+    public ignoreRaycast = false;
 
     /**
      * Invoked at click on drawed game object

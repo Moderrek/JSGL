@@ -1,9 +1,7 @@
-export interface TextSettings {
+export type TextSettings = {
     content?: string;
     font?: string;
     color?: string;
 }
 
-export const defaultTextSettings: TextSettings = {
-    
-}
+export const defaultTextSettings: TextSettings = {};

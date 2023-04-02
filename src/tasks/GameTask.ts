@@ -1,3 +1,1 @@
-export class GameTask {
-    
-}
+export class GameTask {}

@@ -1,8 +1,10 @@
-import { Transform } from "../structs/Transform";
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Transform } from '../structs/Transform';
 
-import { GameObjectDestroyEvent } from "../events/gameobject/GameObjectDestroyEvent";
-import { TickEvent } from "../events/TickEvent";
-import { GameObjectSpawnEvent } from "../events/gameobject/GameObjectSpawnEvent";
+import { GameObjectDestroyEvent } from '../events/gameobject/GameObjectDestroyEvent';
+import { TickEvent } from '../events/TickEvent';
+import { GameObjectSpawnEvent } from '../events/gameobject/GameObjectSpawnEvent';
 
 /**
  * Represents plain GameObject
@@ -66,7 +68,7 @@ export class GameObject {
      * }
      */
     public Start(event: GameObjectSpawnEvent){}
-    /** 
+    /**
      * Invoked at game object destroy.
      * @method
      * @param event - {@link GameObjectDestroyEvent}

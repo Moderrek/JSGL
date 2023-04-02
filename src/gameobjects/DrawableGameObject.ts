@@ -1,17 +1,19 @@
-import { DrawEvent } from "../events/DrawEvent";
-import { GameObject } from "./GameObject";
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { DrawEvent } from '../events/DrawEvent';
+import { GameObject } from './GameObject';
 
-/** 
+/**
  * Represents drawable game object
  * @group Game Objects
  */
 export class DrawableGameObject extends GameObject {
-    
+
     /**
      * Defines is this game object visible in game.
      * @property
      */
-    public visible: boolean = true;
+    public visible = true;
 
     /**
      * Invoked at frame when drawing

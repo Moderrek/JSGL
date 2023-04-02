@@ -1,7 +1,7 @@
 /**
  * Represents Shadow settings.
  */
-export interface Shadow {
+export type Shadow = {
     /**
      * Shadow color
      */

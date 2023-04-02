@@ -1,9 +1,10 @@
-import { Vector2 } from "./Vector2";
+import { Vector2 } from './Vector2';
 import { Clamp } from '../utils/math/MathUtils';
 import { Rotation, RotationType } from './Rotation';
 
+/** @group Important Classes */
 export class Transform{
-    
+
     /** Position */
     public position: Vector2;
     /** Width and height */
@@ -19,7 +20,7 @@ export class Transform{
      * @param scaleY The height
      * @param rotation The rotation in degrees
      */
-    constructor(posX: number, posY: number, scaleX: number, scaleY: number, rotation: number = 0) {
+    constructor(posX: number, posY: number, scaleX: number, scaleY: number, rotation = 0) {
         this.position = new Vector2(posX, posY);
         this.scale = new Vector2(scaleX, scaleY);
         this.rotation = new Rotation({ type: RotationType.DEGREES, value: rotation });
@@ -87,11 +88,12 @@ export class Transform{
     /**
      * @beta
      * @method
-     * @param grid Game canvas grid setting 
+     * @param grid Game canvas grid setting
      */
     ifOnEdgeBounce(grid: Vector2){
-        const isOnEdge = !(Vector2.IsPointIn(new Vector2(), grid.clone().subtract(new Vector2(this.scale.x, this.scale.y)), this.position));
-        if(isOnEdge){
+        const max = grid.clone().subtract(new Vector2(this.scale.x, this.scale.y));
+        const isOnEdge = !(Vector2.IsPointIn(new Vector2(), max, this.position));
+        if (isOnEdge){
             this.position.x = Clamp(this.position.x, 0, grid.x - this.scale.x);
             this.position.y = Clamp(this.position.y, 0, grid.y - this.scale.y);
             this.bounce();
@@ -99,33 +101,33 @@ export class Transform{
     }
 
     public set(x: number | Vector2, y?: number){
-        if(x === undefined)
+        if (x === undefined)
             return;
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             // Vector2 set
             this.position.x = x.x;
             this.position.y = x.y;
-        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+        } else if (typeof x === 'number' && y !== undefined && typeof y === 'number'){
             // x, y set
             this.position.x = x;
             this.position.y = y;
         }
     }
     public setX(x: number | Vector2){
-        if(x === undefined)
+        if (x === undefined)
             return;
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.position.x = x.x;
-        }else if(typeof x === 'number'){
+        } else if (typeof x === 'number'){
             this.position.x = x;
         }
     }
     public setY(y: number | Vector2){
-        if(y === undefined)
+        if (y === undefined)
             return;
-        if(y instanceof Vector2){
+        if (y instanceof Vector2){
             this.position.y = y.y;
-        }else if(typeof y === 'number'){
+        } else if (typeof y === 'number'){
             this.position.y = y;
         }
     }
@@ -138,17 +140,17 @@ export class Transform{
      * @example
      * const vector2 = new JSGL.Vector2(5, 2);
      * transform.translate(vector2);
-     * 
+     *
      * transform.translate(5, 2);
      */
     public translate(x: number | Vector2, y?: number){
-        if(x === undefined)
+        if (x === undefined)
             return;
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             // Vector2 translate
             this.position.x += x.x;
             this.position.y += x.y;
-        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+        } else if (typeof x === 'number' && y !== undefined && typeof y === 'number'){
             // x, y translate
             this.position.x += x;
             this.position.y += y;
@@ -162,15 +164,15 @@ export class Transform{
      * @example
      * const vector2 = new JSGL.Vector2(5, 2);
      * transform.translateX(vector2);
-     * 
+     *
      * transform.translateX(5);
      */
     public translateX(x: number | Vector2){
-        if(x === undefined)
+        if (x === undefined)
             return;
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.position.x += x.x;
-        }else if(typeof x === 'number'){
+        } else if (typeof x === 'number'){
             this.position.x += x;
         }
     }
@@ -182,15 +184,15 @@ export class Transform{
      * @example
      * const vector2 = new JSGL.Vector2(5, 2);
      * transform.translateY(vector2);
-     * 
+     *
      * transform.translateY(2);
      */
     public translateY(y: number | Vector2){
-        if(y === undefined)
+        if (y === undefined)
             return;
-        if(y instanceof Vector2){
+        if (y instanceof Vector2){
             this.position.y += y.y;
-        }else if(typeof y === 'number'){
+        } else if (typeof y === 'number'){
             this.position.y += y;
         }
     }

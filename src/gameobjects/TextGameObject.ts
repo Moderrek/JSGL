@@ -5,7 +5,7 @@ export class TextGameObject extends GameObject{
     style: TextSettings | undefined;
 
     set text(content: string){
-        if(this.style !== undefined)
+        if (this.style !== undefined)
             this.style.content = content;
     }
 

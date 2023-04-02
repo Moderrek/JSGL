@@ -1,0 +1,9 @@
+.github
+.idea
+dev
+dist
+doc
+docs
+examples
+node_modules
+.eslintrc.js

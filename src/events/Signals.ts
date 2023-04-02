@@ -1,10 +1,9 @@
-import { GameEvent } from "../events/GameEvent";
+import { GameEvent } from './GameEvent';
+import { Listener } from '../structs/Listener';
 
-export interface Listener {
-    channel: string;
-    callback: (event: GameEvent) => void;
-}
-
+/**
+ * @group Game Events
+ */
 export class Signals {
 
     listeners: Array<Listener>;
@@ -14,8 +13,8 @@ export class Signals {
     }
 
     emit(channel: string, event: GameEvent){
-        for(const listener of this.listeners){
-            if(channel === listener.channel)
+        for (const listener of this.listeners){
+            if (channel === listener.channel)
                 listener.callback(event);
         }
     }

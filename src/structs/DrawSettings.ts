@@ -3,8 +3,9 @@ import { Shadow } from './Shadow';
 
 /**
  * Represents renderer properties
+ * @group Settings
  */
-export interface DrawSettings {
+export type DrawSettings = {
     /**
      * Should the shape have a fill?
      */
@@ -59,4 +60,4 @@ export const defaultDrawSettings: DrawSettings = {
         blur: 0
     },
     rotationStyle: RotationStyle.allAround
-}
+};

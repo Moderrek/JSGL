@@ -1,8 +1,8 @@
-import { IsInRange, Lerp, floor } from "../utils/math/MathUtils";
+import { IsInRange, Lerp, floor } from '../utils/math/MathUtils';
 
-/** @group Structs */
+/** @group Important Classes */
 export class Vector2{
-    
+
     /**
      * X component of vector.
      * @property
@@ -20,11 +20,11 @@ export class Vector2{
      * @param y - Y component
      * @constructor
      */
-    public constructor(x: number = 0, y: number = 0){
-        if(typeof x !== 'number')
-            throw new Error("X must be an number!");
-        if(typeof y !== 'number')
-            throw new Error("Y must be an number!");
+    public constructor(x = 0, y = 0){
+        if (typeof x !== 'number')
+            throw new Error('X must be an number!');
+        if (typeof y !== 'number')
+            throw new Error('Y must be an number!');
         this.x = x;
         this.y = y;
     }
@@ -45,7 +45,7 @@ export class Vector2{
      * JSGL.Vector2.Lerp(a, b, 0.5); // (4, 5.5)
      * JSGL.Vector2.Lerp(a, b, 1); // (5, 2)
      */
-    public static Lerp(a: Vector2, b: Vector2, c: number = 0): Vector2{
+    public static Lerp(a: Vector2, b: Vector2, c = 0): Vector2{
         return new Vector2(Lerp(a.x, b.x, c), Lerp(a.y, b.y, c));
     }
     /**
@@ -60,7 +60,7 @@ export class Vector2{
      * const max = JSGL.Vector2.Max(a, b); // (5, 9)
      */
     public static Max(a: Vector2, b: Vector2): Vector2{
-        return new Vector2(Math.max(a.x, b.x), Math.max(a.y, b.y)); 
+        return new Vector2(Math.max(a.x, b.x), Math.max(a.y, b.y));
     }
     /**
      * Returns the new Vector2 with minimum X and Y coordinates from first and second Vector2
@@ -104,9 +104,9 @@ export class Vector2{
      * JSGL.Vector2.Equal(vector1, vector2);
      */
     public static Equal(v?: Vector2, v2?: Vector2): boolean{
-        if(v === undefined || v2 === undefined)
+        if (v === undefined || v2 === undefined)
             return false;
-        if(!(v instanceof Vector2) || !(v2 instanceof Vector2))
+        if (!(v instanceof Vector2) || !(v2 instanceof Vector2))
             return false;
         return v.x === v2.x && v.y === v2.y;
     }
@@ -158,7 +158,7 @@ export class Vector2{
     /**
      * Sets components to given Vector2 or X, Y.
      * @method
-     * @param x - The Vector2 or X-coordinate 
+     * @param x - The Vector2 or X-coordinate
      * @param y - The Y-coordinate (if `x` isn't Vector2)
      * @returns This reference
      * @example
@@ -166,16 +166,16 @@ export class Vector2{
      * vector2.set(x, y);
      */
     public set(x: number | Vector2, y?: number): Vector2{
-        if(x === undefined)
+        if (x === undefined)
             return this;
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.x = x.x;
             this.y = x.y;
-        }else if(typeof x === 'number'){
+        } else if (typeof x === 'number'){
             this.x = x;
-            if(y !== undefined && typeof y === 'number'){
+            if (y !== undefined && typeof y === 'number'){
                 this.y = y;
-            }else{
+            } else {
                 this.y = 0;
             }
         }
@@ -185,7 +185,7 @@ export class Vector2{
     /**
      * Adds given Vector2 or X, Y to this Vector2 components.
      * @method
-     * @param x - The Vector2 or X-coordinate 
+     * @param x - The Vector2 or X-coordinate
      * @param y - The Y-coordinate (if `x` isn't Vector2)
      * @returns This reference
      * @example
@@ -193,10 +193,10 @@ export class Vector2{
      * vector2.add(x, y);
      */
     public add(x: number | Vector2, y?: number): Vector2{
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.x += x.x;
             this.y += x.y;
-        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+        } else if (typeof x === 'number' && y !== undefined && typeof y === 'number'){
             this.x += x;
             this.y += y;
         }
@@ -206,7 +206,7 @@ export class Vector2{
     /**
      * Substracts given Vector2 or X, Y to this Vector2 components.
      * @method
-     * @param x - The Vector2 or X-coordinate 
+     * @param x - The Vector2 or X-coordinate
      * @param y - The Y-coordinate (if `x` isn't Vector2)
      * @returns This reference
      * @example
@@ -214,10 +214,10 @@ export class Vector2{
      * vector2.subtract(x, y);
      */
     public subtract(x: number | Vector2, y?: number): Vector2{
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.x -= x.x;
             this.y -= x.y;
-        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+        } else if (typeof x === 'number' && y !== undefined && typeof y === 'number'){
             this.x -= x;
             this.y -= y;
         }
@@ -234,10 +234,10 @@ export class Vector2{
      * vector2.multiply(scalar);
      */
     public multiply(x: number | Vector2): Vector2{
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.x *= x.x;
             this.y *= x.y;
-        }else if(typeof x === 'number'){
+        } else if (typeof x === 'number'){
             this.x *= x;
             this.y *= x;
         }
@@ -251,13 +251,13 @@ export class Vector2{
      * @returns This reference
      * @example
      * vector2.divide(exampleVector);
-     * vector2.multipdividely(scalar);
+     * vector2.divide(scalar);
      */
     public divide(x: number | Vector2): Vector2{
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             this.x /= x.x;
             this.y /= x.y;
-        }else if(typeof x === 'number'){
+        } else if (typeof x === 'number'){
             this.x /= x;
             this.y /= x;
         }
@@ -272,15 +272,15 @@ export class Vector2{
      * @returns The distance between vectors
      * @example
      * vector2.distance(exampleVector);
-     * vector2.distance(0, 0); 
+     * vector2.distance(0, 0);
      */
     public distance(x: number | Vector2, y?: number): number{
-        if(x instanceof Vector2){
+        if (x instanceof Vector2){
             return Math.sqrt(Math.pow(Math.abs(this.x - x.x), 2) + Math.pow(Math.abs(this.y - x.y), 2));
-        }else if(typeof x === 'number' && y !== undefined && typeof y === 'number'){
+        } else if (typeof x === 'number' && y !== undefined && typeof y === 'number'){
             return Math.sqrt(Math.pow(Math.abs(this.x - x), 2) + Math.pow(Math.abs(this.y - y), 2));
         }
-        throw new Error("Invalid params!");
+        throw new Error('Invalid params!');
     }
 
     /**
@@ -307,9 +307,9 @@ export class Vector2{
      * vector1.equal(vector2);
      */
     public equal(v?: Vector2): boolean{
-        if(v === undefined)
+        if (v === undefined)
             return false;
-        if(!(v instanceof Vector2))
+        if (!(v instanceof Vector2))
             return false;
         return this.x === v.x && this.y === v.y;
     }

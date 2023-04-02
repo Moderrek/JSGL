@@ -14,27 +14,27 @@ export class Rotation {
      */
     private _value: number;
 
-    public constructor(rotation: RotationValue = {type: RotationType.RADIANS, value: 0}){
-        if(rotation.type === RotationType.DEGREES){
+    public constructor(rotation: RotationValue = { type: RotationType.RADIANS, value: 0 }){
+        if (rotation.type === RotationType.DEGREES){
             this._value = Rotation.ToRadians(rotation.value);
-        }else if(rotation.type === RotationType.RADIANS){
+        } else if (rotation.type === RotationType.RADIANS){
             this._value = rotation.value;
-        }else{
-            throw new Error("Cannot recognize rotation type!");
+        } else {
+            throw new Error('Cannot recognize rotation type!');
         }
     }
 
     public static get right(){
-        return new Rotation({type: RotationType.DEGREES, value: 0});
+        return new Rotation({ type: RotationType.DEGREES, value: 0 });
     }
     public static get down(){
-        return new Rotation({type: RotationType.DEGREES, value: 90});
+        return new Rotation({ type: RotationType.DEGREES, value: 90 });
     }
     public static get left(){
-        return new Rotation({type: RotationType.DEGREES, value: 180});
+        return new Rotation({ type: RotationType.DEGREES, value: 180 });
     }
     public static get up(){
-        return new Rotation({type: RotationType.DEGREES, value: 270});
+        return new Rotation({ type: RotationType.DEGREES, value: 270 });
     }
 
     public set angles(radians){

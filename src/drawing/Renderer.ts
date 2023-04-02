@@ -1,7 +1,7 @@
 import { Game } from '../Game';
 import { Sprite } from '../gameobjects/Sprite';
 import { Vector2 } from '../structs/Vector2';
-import { DrawSettings, defaultDrawSettings } from './DrawSettings';
+import { DrawSettings, defaultDrawSettings } from '../structs/DrawSettings';
 import { ClickableGameObject } from '../gameobjects/ClickableGameObject';
 import { Clamp01 } from '../utils/math/MathUtils';
 import { RotationStyle } from '../enums/RotationStyle';
@@ -9,6 +9,7 @@ import { Rotation } from '../structs/Rotation';
 
 /**
  * Class represents Game Renderer.
+ * @group Important Classes
  */
 export class Renderer {
     /**
@@ -18,11 +19,11 @@ export class Renderer {
     /**
      * How many pixels have one grid unit.
      */
-    gridSize: number = 0;
+    gridSize = 0;
     /**
      * The decimal midpoint of parent element size.
      */
-    canvasParentSize: number = 1;
+    canvasParentSize = 1;
 
     /**
      * Constructs new Renderer.
@@ -39,13 +40,13 @@ export class Renderer {
      * renderer.resizeCanvas();
      */
     resizeCanvas(){
-        if(!(this.handler.canvas instanceof HTMLCanvasElement))
-            throw new Error("Cannot resize undefined canvas!");
-        
+        if (!(this.handler.canvas instanceof HTMLCanvasElement))
+            throw new Error('Cannot resize undefined canvas!');
+
         const canvas = this.handler.canvas;
         const parent = canvas.parentElement;
-        if(parent == null)
-            throw new Error("Parent cannot be null!");
+        if (parent == null)
+            throw new Error('Parent cannot be null!');
         const maxWidth = parent.clientWidth;
         const maxHeight = parent.clientHeight;
 
@@ -90,8 +91,8 @@ export class Renderer {
      */
     get ctx(): CanvasRenderingContext2D{
         const context = this.handler.canvas.getContext('2d');
-        if(context == null)
-            throw new Error("There was a problem during getting the context");
+        if (context == null)
+            throw new Error('There was a problem during getting the context');
         return context;
     }
 
@@ -117,7 +118,7 @@ export class Renderer {
     /**
      * Combines given draw settings with default draw settings.
      * @method
-     * @param drawSettings - The given draw settings 
+     * @param drawSettings - The given draw settings
      * @returns The combined draw settings
      * @example
      * const drawSettings = renderer.combineDrawSettings({ color: 'red' });
@@ -131,21 +132,21 @@ export class Renderer {
      * @param drawSettings - The draw settings
      */
     private setContextSettings(drawSettings: DrawSettings){
-        if(drawSettings.color !== undefined)
+        if (drawSettings.color !== undefined)
             this.ctx.fillStyle = drawSettings.color;
-        if(drawSettings.borderColor !== undefined)
+        if (drawSettings.borderColor !== undefined)
             this.ctx.strokeStyle = drawSettings.borderColor;
-        if(drawSettings.borderSize !== undefined)
+        if (drawSettings.borderSize !== undefined)
             this.ctx.lineWidth = this.scale(drawSettings.borderSize/64);
-        if(drawSettings.alpha !== undefined)
+        if (drawSettings.alpha !== undefined)
             this.ctx.globalAlpha = Clamp01(drawSettings.alpha);
-        if(drawSettings.shadow?.color !== undefined)
+        if (drawSettings.shadow?.color !== undefined)
             this.ctx.shadowColor = drawSettings.shadow.color;
-        if(drawSettings.shadow?.offsetX !== undefined)
+        if (drawSettings.shadow?.offsetX !== undefined)
             this.ctx.shadowOffsetX = this.scale(drawSettings.shadow.offsetX);
-        if(drawSettings.shadow?.offsetY !== undefined)
+        if (drawSettings.shadow?.offsetY !== undefined)
             this.ctx.shadowOffsetY = this.scale(drawSettings.shadow.offsetY);
-        if(drawSettings.shadow?.blur !== undefined)
+        if (drawSettings.shadow?.blur !== undefined)
             this.ctx.shadowBlur = this.scale(drawSettings.shadow.blur);
     }
 
@@ -168,17 +169,17 @@ export class Renderer {
         const dh = this.scale(worldHeight);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        if(drawSettings.angle !== undefined){
-            if(drawSettings.rotationStyle === RotationStyle.allAround){
+        if (drawSettings.angle !== undefined){
+            if (drawSettings.rotationStyle === RotationStyle.allAround){
                 this.ctx.rotate(Rotation.ToRadians(drawSettings.angle));
             }
         }
         this.ctx.translate(- dx - dw / 2, - dy - dh / 2);
         this.setContextSettings(drawSettings);
         //
-        if(drawSettings.fill)
+        if (drawSettings.fill)
             this.ctx.fillRect(dx, dy, dw, dh);
-        if(drawSettings.border)
+        if (drawSettings.border)
             this.ctx.strokeRect(dx, dy, dw, dh);
         //
         this.ctx.restore();
@@ -204,9 +205,9 @@ export class Renderer {
         this.ctx.beginPath();
         this.ctx.arc(dx + dr, dy + dr, dr, 0, 2 * Math.PI);
         this.ctx.closePath();
-        if(drawSettings.fill)
+        if (drawSettings.fill)
             this.ctx.fill();
-        if(drawSettings.border)
+        if (drawSettings.border)
             this.ctx.stroke();
     }
 
@@ -258,7 +259,7 @@ export class Renderer {
         this.ctx.translate(p1.x, p1.y);
         this.ctx.rotate(angle);
         // Line
-        this.ctx.beginPath();	
+        this.ctx.beginPath();
         this.ctx.moveTo(0, 0);
         this.ctx.lineTo(hyp - size, 0);
         this.ctx.closePath();
@@ -313,13 +314,13 @@ export class Renderer {
      * renderer.fill(game.GetImage('background'));
      */
     fill(content: string | DrawSettings | HTMLCanvasElement){
-        if(content instanceof HTMLCanvasElement){
+        if (content instanceof HTMLCanvasElement){
             this.setContextSettings(defaultDrawSettings);
             this.ctx.drawImage(content, 0, 0, this.canvasWidth, this.canvasHeight);
             return;
-        }else if(typeof content === 'string'){
-            this.setContextSettings(this.combineDrawSettings({ color: content}));
-        }else{
+        } else if (typeof content === 'string'){
+            this.setContextSettings(this.combineDrawSettings({ color: content }));
+        } else {
             this.setContextSettings(this.combineDrawSettings(content));
         }
         this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -328,7 +329,7 @@ export class Renderer {
     /**
      * Draws image.
      * @method
-     * @param image - The image 
+     * @param image - The image
      * @param worldX - The X-coordinate
      * @param worldY - The Y-coordinate
      * @param worldWidth - The width
@@ -337,7 +338,14 @@ export class Renderer {
      * @example
      * renderer.drawImage(game.GetImage('player'), 0, 0, 1, 1, { angle: 45 });
      */
-    drawImage(image: HTMLImageElement, worldX: number, worldY: number, worldWidth: number, worldHeight: number, drawSettings?: DrawSettings){
+    drawImage(
+        image: HTMLImageElement,
+        worldX: number,
+        worldY: number,
+        worldWidth: number,
+        worldHeight: number,
+        drawSettings?: DrawSettings
+        ){
         drawSettings = this.combineDrawSettings(drawSettings);
         const dx = this.scale(worldX);
         const dy = this.scale(worldY);
@@ -345,8 +353,8 @@ export class Renderer {
         const dh = this.scale(worldHeight);
         this.ctx.save();
         this.ctx.translate(dx + dw / 2, dy + dh / 2);
-        if(drawSettings.angle !== undefined){
-            if(drawSettings.rotationStyle === RotationStyle.allAround){
+        if (drawSettings.angle !== undefined){
+            if (drawSettings.rotationStyle === RotationStyle.allAround){
                 this.ctx.rotate(Rotation.ToRadians(drawSettings.angle));
             }
         }
@@ -365,11 +373,11 @@ export class Renderer {
      * renderer.drawSprite(exampleSprite);
      */
     drawSprite(sprite: Sprite): boolean{
-        if(sprite.texture === undefined || sprite.texture === null){
-            console.warn("The Sprite ", sprite, " has not assigned texture!");
+        if (sprite.texture === undefined || sprite.texture === null){
+            console.warn('The Sprite ', sprite, ' has not assigned texture!');
             return false;
         }
-        if(!(sprite.texture instanceof HTMLImageElement)){
+        if (!(sprite.texture instanceof HTMLImageElement)){
             console.warn(`Texture ${sprite.name}[${sprite.id}] cannot be ${typeof sprite.texture}!`);
             return false;
         }
@@ -393,7 +401,7 @@ export class Renderer {
      * renderer.drawHitbox(exampleClickableObject);
      */
     drawHitbox(clickableObject: ClickableGameObject){
-        if(!clickableObject.showHitbox)
+        if (!clickableObject.showHitbox)
             return;
         const pos = clickableObject.transform.position;
         const center = clickableObject.transform.positionCenter;
@@ -426,7 +434,7 @@ export class Renderer {
             center.x + ((scale.x / 2 ) * Math.cos(angle)),
             center.y + ((scale.y / 2 ) * Math.sin(angle)),
             { color: 'red', borderColor: 'red' }
-        )
-    }   
+        );
+    }
 
 }
