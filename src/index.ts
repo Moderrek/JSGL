@@ -34,6 +34,7 @@ export * from './structs/DrawSettings';
 export * from './drawing/Renderer';
 export * from './structs/Shadow';
 
+export * from './Input';
 export * from './Game';
 
 function dateForLog(): string {
