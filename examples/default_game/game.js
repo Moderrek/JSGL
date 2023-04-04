@@ -14,9 +14,9 @@
 const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(10, 10)}, { backgroundColor: 'black' }, 1);
 
 game.LoadGameAndStart().then((gameStartEvent) => {
-    console.log("Game sucessfully loaded!");
+    JSGL.log("Game sucessfully loaded!");
 }).catch((error) => {
-    console.error("Encountered error @ game loading/after loading!", error);
+    JSGL.error("Encountered error @ game loading/after loading!", error);
 }).finally(() => {
-    console.log("After success/error");
+    JSGL.log("After success/error");
 });

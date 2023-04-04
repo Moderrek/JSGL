@@ -34,7 +34,8 @@
     "build": "npm run build:prod && npm run build:types && npm run docs",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "lint": "eslint . --ext .ts"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -42,12 +43,16 @@
     "@babel/preset-typescript": "^7.21.0",
     "@types/node": "^18.15.3",
     "@types/webpack": "^5.28.0",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
     "@webpack-cli/generators": "^3.0.1",
     "babel-loader": "^9.1.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "declaration-bundler-webpack-plugin": "^1.0.3",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.7",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.28",

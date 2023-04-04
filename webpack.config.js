@@ -1,16 +1,18 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-// const { version } = require('./package.json');
 const isProduction = process.env.NODE_ENV == 'production';
+// const { version } = require('./package.json');
 
 const config = {
     entry: {
-        "JSGL": path.resolve(__dirname, 'src/index.ts')
+        'JSGL': path.resolve(__dirname, 'src/index.ts')
     },
     output: {
         asyncChunks: true,
         path: path.resolve(__dirname, 'dist'),
-        chunkFilename: `[name]-[id].js`,
-        filename: `[name].js`,
+        chunkFilename: '[name]-[id].js',
+        filename: '[name].js',
         library: '[name]',
         libraryTarget: 'umd',
         clean: true
@@ -30,9 +32,11 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
+        // config.output.filename = `[name]-${version}.js`
     } else {
         config.mode = 'development';
         config.devtool = 'source-map';
+        // config.output.filename = `[name]-${version}-dev.js`
     }
     return config;
 };

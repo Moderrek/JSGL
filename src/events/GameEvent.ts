@@ -1,11 +1,11 @@
-import { Game } from "../Game";
+import { Game } from '../Game';
 
-/** 
- * @group Game Events 
+/**
+ * @group Game Events
  */
-export interface GameEvent{
-    /**
-     * Event owner reference
-     */
-    game: Game;
-}
+export type GameEvent = {
+  /**
+   * Event owner reference
+   */
+  game: Game;
+};

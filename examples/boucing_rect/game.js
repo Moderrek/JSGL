@@ -1,15 +1,14 @@
 /*
   https://jsglreference.pl/
  */
-const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(25, 25)}, { backgroundColor: 'black' });
+const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(15, 15)}, { backgroundColor: 'black' });
 
 game.on('draw', (event) => {
     event.renderer.fillFrame({ color: 'white' });
 });
 
 class BouncingRect extends JSGL.Shape {
-    Start(event){
-        console.log("Spawned");
+    Start(){
         this.transform.set(game.GetRandomPosition());
         this.showHitbox = true;
         this.properties.color = 'black';
@@ -25,7 +24,7 @@ class BouncingRect extends JSGL.Shape {
 game.LoadGameAndStart().then(() => {
     // Delayed for
     const delay = 1000;
-    const count = 5;
+    const count = 8;
     //
     let i = 0;
     let taskId = setInterval(() => {

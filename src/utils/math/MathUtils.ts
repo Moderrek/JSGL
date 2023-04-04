@@ -13,8 +13,8 @@ export function floor(a: number) {
  * @param max Maximum of range
  * @returns is number in range
  */
-export function IsInRange(a: number, min: number, max: number): boolean{
-    return a >= min && a <= max;
+export function IsInRange(a: number, min: number, max: number): boolean {
+  return a >= min && a <= max;
 }
 /**
  * Clamps number between min and max
@@ -23,16 +23,16 @@ export function IsInRange(a: number, min: number, max: number): boolean{
  * @param max The maximum value
  * @returns Clamped number
  */
-export function Clamp(a: number, min: number, max: number): number{
-    return Math.min(max, Math.max(min, a));
+export function Clamp(a: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, a));
 }
 /**
  * Clamps number between 0 and 1
  * @param a Value to clamp
  * @returns Clamped01 number
  */
-export function Clamp01(a: number): number{
-    return Clamp(a, 0, 1);
+export function Clamp01(a: number): number {
+  return Clamp(a, 0, 1);
 }
 /**
  * A Lerp function returns the value between two numbers at specified decimal midpoints.
@@ -41,12 +41,21 @@ export function Clamp01(a: number): number{
  * @param a Decimal midpoint
  * @returns Value between two numbers
  */
-export function Lerp(x: number, y: number, a: number): number{
-    return x * (1 - a) + y * a;
+export function Lerp(x: number, y: number, a: number): number {
+  return x * (1 - a) + y * a;
 }
-export function InvertedLerp(x: number, y: number, a: number): number{
-    return Clamp01((a - x) / (y - x));
+export function InvertedLerp(x: number, y: number, a: number): number {
+  return Clamp01((a - x) / (y - x));
 }
-export function Range(x1: number, y1: number, x2: number, y2: number, a: number){
-    return Lerp(x2, y2, InvertedLerp(x1, y1, a));
+export function Range(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  a: number
+) {
+  return Lerp(x2, y2, InvertedLerp(x1, y1, a));
+}
+export function RandomInRange(min: number, max: number) {
+  return floor(Math.random() * (max - min)) + min;
 }
