@@ -6,8 +6,8 @@ import { GameEvent } from './GameEvent';
  * @group Game Events
  */
 export type DrawEvent = GameEvent & {
-    /**
-     * Game canvas renderer
-     */
-    renderer: Renderer;
-}
+  /**
+   * Game canvas renderer
+   */
+  renderer: Renderer;
+};

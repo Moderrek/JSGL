@@ -5,8 +5,8 @@ import { GameEvent } from '../GameEvent';
  * @group Game Events
  */
 export type GameObjectSpawnEvent = GameEvent & {
-    /**
-     * Destroyed game object id
-     */
-    gameObjectId: string;
-}
+  /**
+   * Destroyed game object id
+   */
+  gameObjectId: string;
+};

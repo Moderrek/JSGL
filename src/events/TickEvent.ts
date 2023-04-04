@@ -5,20 +5,20 @@ import { GameEvent } from './GameEvent';
  * @group Game Events
  */
 export type TickEvent = GameEvent & {
-    /**
-     * Stores time(in seconds) between the last frame to the current frame.
-     */
-    deltaTime: number;
-    /**
-     * Stores unscaled time(in seconds) between the last frame to the current frame.
-     */
-    unscaledDeltaTime: number;
-    /**
-     * Stores time(in seconds) from start of game.
-     */
-    unscaledTime: number;
-    /**
-     * Time scale
-     */
-    timeScale: number;
-}
+  /**
+   * Stores time(in seconds) between the last frame to the current frame.
+   */
+  deltaTime: number;
+  /**
+   * Stores unscaled time(in seconds) between the last frame to the current frame.
+   */
+  unscaledDeltaTime: number;
+  /**
+   * Stores time(in seconds) from start of game.
+   */
+  unscaledTime: number;
+  /**
+   * Time scale
+   */
+  timeScale: number;
+};

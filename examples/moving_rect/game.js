@@ -15,17 +15,17 @@ class MovingRect extends JSGL.Shape {
         this.properties.borderColor = 'black';
     }
     Update(event){
-        this.transform.translate(new JSGL.Vector2(1, 1).multiply(event.deltaTime).multiply(this.transform.forward));
+        this.transform.translate(this.transform.forward.multiply(event.deltaTime));
     }
-    OnMouseClick = () => console.log('mouse click');
-    OnMouseDown = () => console.log('mouse down');
-    OnMouseUp = () => console.log('mouse up');
+    OnMouseClick = () => JSGL.log('mouse click');
+    OnMouseDown = () => JSGL.log('mouse down');
+    OnMouseUp = () => JSGL.log('mouse up');
     OnMouseHoverStart(){
-        console.log('mouse hover start');
+        JSGL.log('mouse hover start');
         this.properties.color = 'blue';
     }
     OnMouseHoverEnd(){
-        console.log('mouse hover end');
+        JSGL.log('mouse hover end');
         this.properties.color = 'red';
     }
 }

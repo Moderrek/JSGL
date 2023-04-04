@@ -9,6 +9,30 @@ const canvasCenter = grid.clone().divide(2);
 
 const game = JSGL.DefaultGame.Create({ grid: grid }, { backgroundColor: 'black' }, 1);
 
+class GameManager extends JSGL.GameObject {
+    Start(){
+        game.timeScale = 2;
+    }
+    Update(){
+        // Time manimulation
+        const timeChange = game.input.mouseScrollDelta.y * -0.01;
+        game.timeScale = JSGL.Clamp(game.timeScale - timeChange, -20, 20);
+        // WSAD movement
+        if(game.input.isKeyUp('w')){
+            game.canvasViewOffset.add(0, -1);
+        }
+        if(game.input.isKeyUp('s')){
+            game.canvasViewOffset.add(0, 1);
+        }
+        if(game.input.isKeyUp('a')){
+            game.canvasViewOffset.add(-1, 0);
+        }
+        if(game.input.isKeyUp('d')){
+            game.canvasViewOffset.add(1, 0);
+        }
+    }
+}
+
 class Sun extends JSGL.Shape {
     Start(){
         // Shape
@@ -34,13 +58,12 @@ class Planet extends JSGL.Shape {
         this.transform.set(canvasCenter.clone().subtract(new JSGL.Vector2(this.offset * 6, this.size / 2 - 5 / 2 - 1)));
     }
     Update(event){
-        this.transform.eulerAngles += (360 / 6 * event.deltaTime / this.offset);
+        this.transform.eulerAngles += 360 / 6 * event.deltaTime / this.offset;
         this.transform.translate(new JSGL.Vector2(9.3, 3).multiply(event.deltaTime).multiply(this.transform.forward));
     }
 }
 
 game.LoadGameAndStart().then(() => {
-    game.timeScale = 2;
     function createPlanet(offset, color, size){
         let planet = new Planet();
         planet.offset = offset;
@@ -58,4 +81,5 @@ game.LoadGameAndStart().then(() => {
     createPlanet(9, '#3871b7', 2.5);
     createPlanet(11, '#dadada', 0.25);
     game.AddGameObject(new Sun());
+    game.AddGameObject(new GameManager());
 });

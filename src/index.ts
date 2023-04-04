@@ -10,6 +10,7 @@ export * from './enums/RotationStyle';
 export * from './events/Signals';
 
 export * from './gameobjects/GameObject';
+export * from './gameobjects/DrawableGameObject';
 export * from './gameobjects/ClickableGameObject';
 export * from './gameobjects/Shape';
 export * from './gameobjects/SimpleShape';
@@ -34,6 +35,24 @@ export * from './drawing/Renderer';
 export * from './structs/Shadow';
 
 export * from './Game';
+
+function dateForLog(): string {
+  const date = new Date();
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function log(message: any) {
+  console.log(`[${dateForLog()}] [LOG]:`, message);
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function warn(message: any) {
+  console.warn(`[${dateForLog()}] [WARN]:`, message);
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function error(message: any) {
+  console.error(`[${dateForLog()}] [ERR]:`, message);
+}
 
 export const license = 'MIT';
 export const author = 'Tymon "MODERR" Woźniak';
