@@ -457,7 +457,7 @@ export class Renderer {
     this.drawLine(pos.x + scale.x, pos.y, pos.x, pos.y + scale.y, {
       borderColor: 'red',
     });
-    const angle = clickableObject.transform.angles;
+    const angle = Rotation.ToRadians(clickableObject.transform.eulerAngles);
     this.drawArrow(
       center.x,
       center.y,

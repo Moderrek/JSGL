@@ -37,22 +37,26 @@ export * from './structs/Shadow';
 export * from './Input';
 export * from './Game';
 
-function dateForLog(): string {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function msg(type: string, message: any) {
   const date = new Date();
-  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+  const milis = date.getMilliseconds().toString().padStart(3, '0');
+  console.log(`[${hours}:${minutes}:${seconds}:${milis}] [${type}]:`, message);
 }
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function log(message: any) {
-  console.log(`[${dateForLog()}] [LOG]:`, message);
+  msg('LOG', message);
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function warn(message: any) {
-  console.warn(`[${dateForLog()}] [WARN]:`, message);
+  msg('WARN', message);
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function error(message: any) {
-  console.error(`[${dateForLog()}] [ERR]:`, message);
+  msg('ERR', message);
 }
 
 export const license = 'MIT';

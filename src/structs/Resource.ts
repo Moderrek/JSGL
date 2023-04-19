@@ -1,7 +1,9 @@
+export type ResourceType = 'image';
+
 export type Resource = {
   uid: string;
-  type: string;
+  type: ResourceType;
   path: string;
-  object: object | undefined;
+  object?: object;
   loaded: boolean;
 };

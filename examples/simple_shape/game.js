@@ -3,6 +3,7 @@
  */
 const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(5, 5)}, { backgroundColor: 'black' });
 
+// Creates white background for canvas
 game.on('draw', (event) => {
     event.renderer.fill('white');
 });

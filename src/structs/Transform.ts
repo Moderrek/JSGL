@@ -75,9 +75,10 @@ export class Transform {
    * @property
    */
   public get forward(): Vector2 {
+    const radians = Rotation.ToRadians(this.rotation.eulerAngles);
     return new Vector2(
-      Math.cos(this.rotation.angles),
-      Math.sin(this.rotation.angles)
+      Math.cos(radians),
+      Math.sin(radians)
     );
   }
   /**
