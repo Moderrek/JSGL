@@ -1,7 +1,7 @@
 import { Vector2 } from './structs/Vector2';
 import { Signals } from './events/Signals';
 import { GameEvent } from './events/GameEvent';
-import { Resource } from './structs/Resource';
+import { Resource, ResourceType } from './structs/Resource';
 import { Renderer } from './drawing/Renderer';
 import { GameObject } from './gameobjects/GameObject';
 import { GameMouseEvent } from './events/GameMouseEvent';
@@ -130,8 +130,8 @@ export class Game {
     };
     // Events update
     const hoveredGameObject = this.mouseHoveredGameObject;
-    const lastHoveredGameObject = this.lastMouseHoveredGameObject;
     const mouseEvent = this.constructMouseEvent();
+    const lastHoveredGameObject = this.lastMouseHoveredGameObject;
     if (lastHoveredGameObject !== hoveredGameObject) {
       if (lastHoveredGameObject !== undefined)
         lastHoveredGameObject.OnMouseHoverEnd(mouseEvent);
@@ -141,7 +141,7 @@ export class Game {
 
     this.input.mouseScrollDelta = new Vector2(0, this._tempMouseWheelDeltaY);
     if (this._tempMouseWheelDeltaY !== 0) {
-      this.emit('mouseScroll', this.constructMouseEvent());
+      this.emit('mouseScroll', mouseEvent);
     }
     this._tempMouseWheelDeltaY = 0;
 
@@ -326,7 +326,7 @@ export class Game {
    * @example
    * game.LoadResource('image', 'player', './resources/img/player.png');
    */
-  LoadResource(type: 'image', uid: string, path: string) {
+  LoadResource(type: ResourceType, uid: string, path: string) {
     if (type === 'image') {
       this.resources.set(uid, {
         uid: uid,

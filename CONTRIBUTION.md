@@ -1,3 +1,3 @@
 # Contributions
 
-Tymon Woźniak <tymon.wozniak@my.com>
+Tymon Woźniak <tymon.student@gmail.com>

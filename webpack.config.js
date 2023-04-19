@@ -32,11 +32,11 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        // config.output.filename = `[name]-${version}.js`
+        // config.output.filename = `[name]-${version}.js`;
     } else {
         config.mode = 'development';
         config.devtool = 'source-map';
-        // config.output.filename = `[name]-${version}-dev.js`
+        // config.output.filename = `[name]-${version}-dev.js`;
     }
     return config;
 };

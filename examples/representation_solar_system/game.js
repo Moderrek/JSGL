@@ -14,7 +14,7 @@ class GameManager extends JSGL.GameObject {
         game.timeScale = 2;
     }
     Update(){
-        // Time manimulation
+        // Time manipulation
         const timeChange = game.input.mouseScrollDelta.y * -0.01;
         game.timeScale = JSGL.Clamp(game.timeScale - timeChange, -20, 20);
         // WSAD movement

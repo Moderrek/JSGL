@@ -2,13 +2,13 @@
   "name": "@moderrkowo/jsgl",
   "displayName": "JSGL",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "publisher": "Tymon Woźniak",
   "main": "./dist/index.js",
   "homepage": "https://jsglreference.pl/",
   "bugs": {
     "url": "https://github.com/Moderrek/JSGL/issues",
-    "email": "tymon.wozniak@my.com"
+    "email": "tymon.student@gmail.com"
   },
   "author": "Tymon Woźniak",
   "license": "MIT",
@@ -30,8 +30,8 @@
   ],
   "scripts": {
     "build:types": "tsc",
-    "docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator",
-    "build": "npm run build:prod && npm run build:types && npm run docs",
+    "build:docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator --logLevel Error",
+    "build": "npm run build:prod && npm run build:types && npm run build:docs",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
