@@ -3,7 +3,7 @@
     <p>
         <a href="https://github.com/Moderrek/JSGL/blob/release/LICENSE.md"><img src="https://img.shields.io/github/license/Moderrek/JSGL" alt="license"></a>
         <a href="https://www.codefactor.io/repository/github/moderrek/jsgl"><img src="https://www.codefactor.io/repository/github/moderrek/jsgl/badge" alt="codefactor"></a>
-        <a href="https://www.npmjs.com/package/@moderrkowo/jsgl"><img src="https://img.shields.io/npm/dm/@moderrkowo/jsgl" alt="downloads"></a>
+        <a href="https://www.npmjs.com/package/@moderrkowo/jsgl"><img src="https://img.shields.io/npm/dt/@moderrkowo/jsgl" alt="downloads"></a>
         <a href="https://www.npmjs.com/package/@moderrkowo/jsgl"><img src="https://img.shields.io/npm/v/@moderrkowo/jsgl" alt="version"></a>
     </p>
 </div>
