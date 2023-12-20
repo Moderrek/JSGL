@@ -37,12 +37,12 @@ export class Game {
     if (this.gameSettings.canvas !== undefined) {
       this.canvas = this.gameSettings.canvas;
     } else {
-      throw new Error('Cannot asign canvas.');
+      throw new Error('Cannot assign canvas.');
     }
     if (this.gameSettings.grid !== undefined) {
       this.grid = this.gameSettings.grid;
     } else {
-      throw new Error('Cannot asign grid.');
+      throw new Error('Cannot assign grid.');
     }
     this.input = new Input();
     this._registerCanvasEvents();

@@ -2,7 +2,7 @@
   "name": "@moderrkowo/jsgl",
   "displayName": "JSGL",
   "description": "Client-side JavaScript library for creating web 2D games. Focusing at objective game.",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "publisher": "Tymon Woźniak",
   "main": "./dist/index.js",
   "homepage": "https://jsglreference.pl/",

@@ -17,7 +17,6 @@ module.exports = {
     'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
     'key-spacing': 'error',
     'keyword-spacing': 'error',
-    'linebreak-style': 'error',
     'max-len': ['error', {
       code: 120,
       ignorePattern: '^// Flags:',
