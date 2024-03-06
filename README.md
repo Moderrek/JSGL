@@ -47,7 +47,7 @@ console.log(exampleVector2);
 ```
 <!-- # Usage W.I.P -->
 # Documentation
-* [JSGL Reference](https://jsglreference.pl/)  
+* [JSGL Reference](https://moderrek.github.io/JSGLDoc/)  
 * [JSGL Wiki](https://github.com/Moderrek/JSGL)  
 * [JSGL Examples](https://github.com/Moderrek/JSGL/tree/release/examples)  
 * [JSGL Changelogs](https://github.com/Moderrek/JSGL/tree/release/doc/changelogs)
