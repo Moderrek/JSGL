@@ -9,7 +9,7 @@
 </div>
 
 # About The Project
-Client-side JavaScript library for creating web 2D games. Focusing at objective game.
+Client-side JavaScript library for creating web 2D games. Focusing at objective game.  
 Use the JSGL to create 2D games.
 ## Features
 * Creating 2D Games in HTML Canvas
@@ -65,7 +65,7 @@ Installed [**git**](https://git-scm.com/downloads) and [**Node.js**](https://nod
    npm install
    ```
 3. Run build script
-   * `npm run build` - Builds deployment bundle, types declaration and docs -> `/dist` `/docs`
+   * `npm run build` - Builds deployment bundle, types declaration and docs -> `/dist` and `/docs`
    * `npm run build:prod` - Builds deployment bundle -> `/dist`
    * `npm run build:dev` - Builds mapped bundle -> `/dist`
    * `npm run build:types` - Builds types declaration -> `/dist`
