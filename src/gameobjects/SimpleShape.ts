@@ -6,10 +6,10 @@ import { Shape } from './Shape';
  * @group Game Objects
  */
 export class SimpleShape extends Shape {
-  public constructor(shapeType: ShapeType, drawSettings?: DrawSettings) {
-    super();
-    this.type = shapeType;
-    if (drawSettings !== undefined)
-      this.properties = { ...defaultDrawSettings, ...drawSettings };
-  }
+    public constructor(shapeType: ShapeType, drawSettings?: DrawSettings) {
+        super();
+        this.type = shapeType;
+        if (drawSettings !== undefined)
+            this.properties = { ...defaultDrawSettings, ...drawSettings };
+    }
 }

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "module": "CommonJS",
-    "lib": ["ES2017", "ES7", "ES6", "DOM"],
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM"],
     "declaration": true,
     "preserveConstEnums": true,
     "outDir": "./dist/",
@@ -11,6 +11,10 @@
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "vite.config.ts"
+  ],
+  "include": [
+    "src/**/*"
   ]
 }
