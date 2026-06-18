@@ -1,8 +1,8 @@
-import { Renderer } from '../drawing/Renderer';
-import { GameEvent } from './GameEvent';
+import { Renderer } from '@/drawing/Renderer';
+import GameEvent from '@/events/GameEvent';
 
 /**
- * Invoked at frame drawing
+ * Invoked at frame drawing.
  * @group Game Events
  */
 export type DrawEvent = GameEvent & {
@@ -11,3 +11,5 @@ export type DrawEvent = GameEvent & {
      */
     renderer: Renderer;
 };
+
+export default DrawEvent;

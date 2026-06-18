@@ -1,20 +1,20 @@
-import { Vector2 } from './structs/Vector2';
-import { Signals } from './events/Signals';
-import { GameEvent } from './events/GameEvent';
-import { Resource, ResourceType } from './structs/Resource';
-import { Renderer } from './drawing/Renderer';
-import { GameObject } from './gameobjects/GameObject';
-import { GameMouseEvent } from './events/GameMouseEvent';
-import { GameObjectSpawnEvent } from './events/gameobject/GameObjectSpawnEvent';
-import { GameObjectDestroyEvent } from './events/gameobject/GameObjectDestroyEvent';
-import { DrawEvent } from './events/DrawEvent';
-import { TickEvent } from './events/TickEvent';
-import { ClickableGameObject } from './gameobjects/ClickableGameObject';
-import { DrawableGameObject } from './gameobjects/DrawableGameObject';
-import { IsInRange, RandomInRange, floor } from './utils/math/MathUtils';
-import { GameStartEvent } from './events/GameStartEvent';
-import { GameSettings, defaultGameSettings } from './structs/GameSettings';
-import { Input } from './Input';
+import { Vector2 } from '@/structs/Vector2';
+import { Signals } from '@/events/Signals';
+import { GameEvent } from '@/events/GameEvent';
+import { Resource, ResourceType } from '@/structs/Resource';
+import { Renderer } from '@/drawing/Renderer';
+import { GameObject } from '@/gameobjects/GameObject';
+import { GameMouseEvent } from '@/events/GameMouseEvent';
+import { GameObjectSpawnEvent } from '@/events/gameobject/GameObjectSpawnEvent';
+import { GameObjectDestroyEvent } from '@/events/gameobject/GameObjectDestroyEvent';
+import { DrawEvent } from '@/events/DrawEvent';
+import { TickEvent } from '@/events/TickEvent';
+import { ClickableGameObject } from '@/gameobjects/ClickableGameObject';
+import { DrawableGameObject } from '@/gameobjects/DrawableGameObject';
+import { IsInRange, RandomInRange, floor } from '@/utils/math/MathUtils';
+import { GameStartEvent } from '@/events/GameStartEvent';
+import { GameSettings, defaultGameSettings } from '@/structs/GameSettings';
+import { Input } from '@/Input';
 
 /**
  * @group Important Classes
@@ -758,3 +758,5 @@ export class Game {
         );
     }
 }
+
+export default Game;

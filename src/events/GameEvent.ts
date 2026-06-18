@@ -1,7 +1,8 @@
-import { Game } from '../Game';
+import { Game } from '@/Game';
 
 /**
  * @group Game Events
+ * The base event type for all game events.
  */
 export type GameEvent = {
     /**
@@ -9,3 +10,5 @@ export type GameEvent = {
      */
     game: Game;
 };
+
+export default GameEvent;

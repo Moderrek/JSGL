@@ -5,3 +5,5 @@ export enum ShapeType {
     Circle = 'CIRCLE',
     Ellipse = 'CIRCLE',
 }
+
+export default ShapeType;

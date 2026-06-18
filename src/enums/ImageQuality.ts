@@ -6,3 +6,5 @@ export enum ImageQuality {
     Medium = 'medium',
     Low = 'low',
 }
+
+export default ImageQuality;

@@ -8,6 +8,9 @@
     "outDir": "./dist/",
     "strict": true,
     "esModuleInterop": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
   },
   "exclude": [
     "node_modules",

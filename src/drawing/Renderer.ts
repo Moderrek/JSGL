@@ -514,3 +514,5 @@ export class Renderer {
     //     this.ctx.restore();
     // }
 }
+
+export default Renderer;

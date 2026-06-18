@@ -1,4 +1,4 @@
-import { IsInRange, Lerp, floor } from '../utils/math/MathUtils';
+import { IsInRange, Lerp, floor } from '@/utils/math/MathUtils';
 
 /** @group Important Classes */
 export class Vector2 {

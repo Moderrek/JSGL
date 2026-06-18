@@ -64,3 +64,4 @@ export function error(message: any) {
 
 export const license = 'MIT';
 export const author = 'Tymon "MODERR" Woźniak';
+export const version = '2.0.0';
