@@ -7,3 +7,5 @@ export type Resource = {
     object?: object;
     loaded: boolean;
 };
+
+export default Resource;

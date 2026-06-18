@@ -1,4 +1,4 @@
-import { Vector2 } from './structs/Vector2';
+import Vector2 from '@/structs/Vector2';
 
 export class Input {
     // Mouse
@@ -37,9 +37,13 @@ export class Input {
     public keysDown: Set<string> = new Set();
 
     public isKeyDown(keyCode: string): boolean {
-        return this.keysDown.has(keyCode.toLowerCase().replace('key', ''));
+        const key = keyCode.toLowerCase().replace('key', '');
+        return this.keysDown.has(key);
     }
     public isKeyUp(keyCode: string): boolean {
-        return this.keysUp.has(keyCode.toLowerCase().replace('key', ''));
+        const key = keyCode.toLowerCase().replace('key', '');
+        return this.keysUp.has(key);
     }
 }
+
+export default Input;

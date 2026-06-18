@@ -751,10 +751,20 @@ export class Game {
             floor(Math.random() * this.grid.y + this.canvasViewOffset.y),
         );
     }
+
     public GetRandomPositionIn(min: Vector2, max: Vector2) {
         return new Vector2(
             RandomInRange(min.x, max.x),
-            RandomInRange(min.y, max.x),
+            RandomInRange(min.y, max.y),
+        );
+    }
+
+    public GetRandomPositionInDistance(center: Vector2, distance: number) {
+        const angle = Math.random() * 2 * Math.PI;
+        const radius = Math.sqrt(Math.random()) * distance;
+        return new Vector2(
+            center.x + radius * Math.cos(angle),
+            center.y + radius * Math.sin(angle),
         );
     }
 }

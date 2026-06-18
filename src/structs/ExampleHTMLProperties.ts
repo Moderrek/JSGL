@@ -12,3 +12,5 @@ export const exampleHTMLDefaultProperties: ExampleHTMLProperties = {
     document: undefined,
     backgroundColor: undefined,
 };
+
+export default ExampleHTMLProperties;

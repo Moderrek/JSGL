@@ -61,3 +61,5 @@ export const defaultDrawSettings: DrawSettings = {
     },
     rotationStyle: RotationStyle.allAround,
 };
+
+export default DrawSettings;

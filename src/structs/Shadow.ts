@@ -19,3 +19,5 @@ export type Shadow = {
      */
     blur: number;
 };
+
+export default Shadow;

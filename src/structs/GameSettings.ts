@@ -1,5 +1,5 @@
-import { ImageQuality } from '../enums/ImageQuality';
-import { Vector2 } from './Vector2';
+import ImageQuality from '@/enums/ImageQuality';
+import Vector2 from '@/structs/Vector2';
 
 /**
  * The {@link Game} settings.
@@ -28,3 +28,5 @@ export const defaultGameSettings: GameSettings = {
     canvasImageQuality: ImageQuality.High,
     drawAlways: true,
 };
+
+export default GameSettings;
