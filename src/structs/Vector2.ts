@@ -90,9 +90,7 @@ export class Vector2 {
         max: Vector2,
         point: Vector2,
     ): boolean {
-        return (
-            IsInRange(point.x, min.x, max.x) && IsInRange(point.y, min.y, max.y)
-        );
+        return IsInRange(point.x, min.x, max.x) && IsInRange(point.y, min.y, max.y);
     }
 
     /**
@@ -152,7 +150,7 @@ export class Vector2 {
     }
 
     public get magnitude() {
-        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+        return Math.hypot(this.x, this.y);
     }
 
     // Instance Methods
@@ -283,22 +281,23 @@ export class Vector2 {
      * vector2.distance(0, 0);
      */
     public distance(x: number | Vector2, y?: number): number {
+        let otherX: number, otherY: number;
+
         if (x instanceof Vector2) {
-            return Math.sqrt(
-                Math.pow(Math.abs(this.x - x.x), 2) +
-                    Math.pow(Math.abs(this.y - x.y), 2),
-            );
+            otherX = x.x;
+            otherY = x.y;
         } else if (
             typeof x === 'number' &&
             y !== undefined &&
             typeof y === 'number'
         ) {
-            return Math.sqrt(
-                Math.pow(Math.abs(this.x - x), 2) +
-                    Math.pow(Math.abs(this.y - y), 2),
-            );
+            otherX = x;
+            otherY = y;
+        } else {
+            throw new Error('Invalid params!');
         }
-        throw new Error('Invalid params!');
+
+        return Math.hypot(this.x - otherX, this.y - otherY);
     }
 
     /**
@@ -339,3 +338,5 @@ export class Vector2 {
         return new Vector2(this.x, this.y);
     }
 }
+
+export default Vector2;

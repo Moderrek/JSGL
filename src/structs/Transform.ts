@@ -1,6 +1,6 @@
-import { Vector2 } from './Vector2';
-import { Clamp } from '../utils/math/MathUtils';
-import { Rotation, RotationType } from './Rotation';
+import Vector2 from '@/structs/Vector2';
+import { Rotation, RotationType } from '@/structs/Rotation';
+import { Clamp } from '@/utils/math/MathUtils';
 
 /** @group Important Classes */
 export class Transform {
