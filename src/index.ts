@@ -21,6 +21,7 @@ export * from './example/ExampleHTML';
 export * from './example/DefaultGame';
 
 export * from './utils/math/MathUtils';
+export * from './utils/interval';
 
 export * from './events/GameEvent';
 export * from './events/DrawEvent';

@@ -100,15 +100,29 @@ export class Transform {
      * @param grid Game canvas grid setting
      */
     ifOnEdgeBounce(grid: Vector2) {
-        const max = grid
-            .clone()
-            .subtract(new Vector2(this.scale.x, this.scale.y));
-        const isOnEdge = !Vector2.IsPointIn(new Vector2(), max, this.position);
-        if (isOnEdge) {
-            this.position.x = Clamp(this.position.x, 0, grid.x - this.scale.x);
-            this.position.y = Clamp(this.position.y, 0, grid.y - this.scale.y);
-            this.bounce();
+        const maxX = Math.max(0, grid.x - this.scale.x);
+        const maxY = Math.max(0, grid.y - this.scale.y);
+
+        const hitLeft = this.position.x < 0;
+        const hitRight = this.position.x > maxX;
+        const hitTop = this.position.y < 0;
+        const hitBottom = this.position.y > maxY;
+
+        if (!hitLeft && !hitRight && !hitTop && !hitBottom) return;
+
+        this.position.x = Clamp(this.position.x, 0, maxX);
+        this.position.y = Clamp(this.position.y, 0, maxY);
+
+        let angle = this.rotation.eulerAngles;
+
+        if (hitLeft || hitRight) {
+            angle = 180 - angle;
         }
+        if (hitTop || hitBottom) {
+            angle = -angle;
+        }
+
+        this.rotation.eulerAngles = angle;
     }
 
     public set(x: number | Vector2, y?: number) {

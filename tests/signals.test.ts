@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type Game from '@/Game';
 import Signals from '@/events/Signals';
+
+import type Game from '@/Game';
 import type GameEvent from '@/events/GameEvent';
 
 const createEvent = (): GameEvent => ({
