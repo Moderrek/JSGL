@@ -44,7 +44,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "publish": "npm run build && npm publish"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
