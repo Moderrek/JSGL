@@ -1,5 +1,5 @@
 /*
-  https://jsglreference.pl/
+ * https://moderrek.github.io/JSGLDoc/
  */
 
 // JSGL.ExampleHTML.Render({ backgroundColor: 'black'});

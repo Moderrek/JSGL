@@ -7,6 +7,10 @@ const game = JSGL.DefaultGame.Create({ grid: new JSGL.Vector2(8, 6)}, { backgrou
 
 game.LoadResource('image', 'multitasker', './Multitasker.png');
 
+game.on('draw', (event) => {
+    event.renderer.fill('white');
+});
+
 class Egg extends JSGL.Sprite {
     speed;
 
@@ -16,22 +20,25 @@ class Egg extends JSGL.Sprite {
         this.toRandomPos();
     }
     OnMouseClick(){
-        game.DestroyGameObjectByRef(this);
-        game.AddGameObject(new Egg());
+        this.killAndSpawn();
         game.PlaySound('./pop.mp3');
     }
     Update(event){
         this.transform.translate(JSGL.Vector2.up.multiply(event.deltaTime + this.speed));
         this.transform.eulerAngles += 50 * event.deltaTime;
         if(this.transform.position.y > 7){
-            game.DestroyGameObjectByRef(this);
-            game.AddGameObject(new Egg());
+            this.killAndSpawn();
         }
     }
 
     toRandomPos(){
         this.transform.set(game.GetRandomPosition());
-        this.transform.position.y = Math.random() * -2;
+        this.transform.position.y = -(2 * Math.random());
+    }
+
+    killAndSpawn() {
+        game.DestroyGameObjectByRef(this);
+        game.AddGameObject(new Egg());
     }
 }
 
@@ -40,24 +47,12 @@ function spawnEgg(){
     game.AddGameObject(egg);
 }
 
-game.on('draw', (event) => {
-    event.renderer.fill('white');
-});
-
-game.on('keyUp', (event) => {
-    if(event.input.isKeyUp('s')){
-        game.timeScale -= 0.1;
-    }
-    if(event.input.isKeyUp('w')){
-        game.timeScale += 0.1;
-    }
-    game.timeScale = JSGL.Clamp(game.timeScale, 0, 1);
-});
-
 game.LoadGameAndStart().then(() => {
-    spawnEgg();
-    spawnEgg();
-    spawnEgg();
+    // Spawn 3 eggs at the start of the game
+    for (let i = 0; i < 3; ++i) {
+        spawnEgg();
+    }
+    // Spawn an egg every 7 seconds
     setInterval(() => {
         spawnEgg();
     }, 7000);
