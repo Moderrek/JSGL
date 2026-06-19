@@ -1,4 +1,4 @@
-import { GameEvent } from '../GameEvent';
+import GameEvent from '@/events/GameEvent';
 
 /**
  * Invoked at game object spawn
@@ -6,7 +6,10 @@ import { GameEvent } from '../GameEvent';
  */
 export type GameObjectSpawnEvent = GameEvent & {
     /**
-     * Destroyed game object id
+     * Spawned game object id
      */
     gameObjectId: string;
 };
+
+export default GameObjectSpawnEvent;
+

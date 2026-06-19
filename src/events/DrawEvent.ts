@@ -1,13 +1,17 @@
-import { Renderer } from '@/drawing/Renderer';
 import GameEvent from '@/events/GameEvent';
 
+import type Renderer from '@/drawing/Renderer';
+
 /**
- * Invoked at frame drawing.
+ * Event emitted during the draw phase of the game loop.
+ * Contains a reference to the game instance and the renderer.
+ * 
  * @group Game Events
+ * 
  */
 export type DrawEvent = GameEvent & {
     /**
-     * Game canvas renderer
+     * Renderer reference for drawing operations
      */
     renderer: Renderer;
 };

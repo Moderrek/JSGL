@@ -1,13 +1,15 @@
-import { Vector2 } from '../structs/Vector2';
-import { GameEvent } from './GameEvent';
+import GameEvent from '@/events/GameEvent';
+
+import type Vector2 from '@/structs/Vector2';
 
 /**
- * Invoked at client mouse event
+ * Event emitted when a mouse event occurs in the game.
+ * Contains mouse position and state information.
+ * 
  * @group Game Events
+ * 
  */
-export type GameMouseEvent = GameEvent & {
-    // DEPRECATED
-
+export type MouseEvent = GameEvent & {
     /**
      * Integer Vector2 mouse position on grid.
      * Use `mouseWorldPosition` instead.
@@ -59,3 +61,5 @@ export type GameMouseEvent = GameEvent & {
      */
     mouseScrollDelta: Vector2;
 };
+
+export default MouseEvent;

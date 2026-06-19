@@ -24,7 +24,8 @@ export * from './utils/math/MathUtils';
 
 export * from './events/GameEvent';
 export * from './events/DrawEvent';
-export * from './events/GameMouseEvent';
+export * from './events/input/MouseEvent';
+export * from './events/input/KeyEvent';
 export * from './events/gameobject/GameObjectSpawnEvent';
 export * from './events/gameobject/GameObjectDestroyEvent';
 export * from './events/GameStartEvent';
@@ -49,14 +50,17 @@ export function msg(type: string, message: any) {
         message,
     );
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function log(message: any) {
     msg('LOG', message);
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function warn(message: any) {
     msg('WARN', message);
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function error(message: any) {
     msg('ERR', message);

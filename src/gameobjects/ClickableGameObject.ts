@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GameMouseEvent } from '../events/GameMouseEvent';
+import { MouseEvent } from '../events/input/MouseEvent';
 import { DrawableGameObject } from './DrawableGameObject';
 
 /**
@@ -23,19 +23,19 @@ export class ClickableGameObject extends DrawableGameObject {
      * Invoked at click on drawed game object
      * @virtual
      */
-    public OnMouseClick(event: GameMouseEvent) {}
-    public OnMouseUp(event: GameMouseEvent) {}
-    public OnMouseDown(event: GameMouseEvent) {}
+    public OnMouseClick(event: MouseEvent) {}
+    public OnMouseUp(event: MouseEvent) {}
+    public OnMouseDown(event: MouseEvent) {}
     /**
      * Invoked at hover start on drawed game object
      * @returns is handled?
      * @virtual
      */
-    public OnMouseHoverStart(event: GameMouseEvent) {}
+    public OnMouseHoverStart(event: MouseEvent) {}
     /**
      * Invoked at hover end on drawed game object
      * @returns is handled?
      * @virtual
      */
-    public OnMouseHoverEnd(event: GameMouseEvent) {}
+    public OnMouseHoverEnd(event: MouseEvent) {}
 }

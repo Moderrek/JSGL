@@ -40,6 +40,7 @@ export class Input {
         const key = keyCode.toLowerCase().replace('key', '');
         return this.keysDown.has(key);
     }
+    
     public isKeyUp(keyCode: string): boolean {
         const key = keyCode.toLowerCase().replace('key', '');
         return this.keysUp.has(key);

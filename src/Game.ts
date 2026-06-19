@@ -4,7 +4,7 @@ import { GameEvent } from '@/events/GameEvent';
 import { Resource, ResourceType } from '@/structs/Resource';
 import { Renderer } from '@/drawing/Renderer';
 import { GameObject } from '@/gameobjects/GameObject';
-import { GameMouseEvent } from '@/events/GameMouseEvent';
+import { MouseEvent } from '@/events/input/MouseEvent';
 import { GameObjectSpawnEvent } from '@/events/gameobject/GameObjectSpawnEvent';
 import { GameObjectDestroyEvent } from '@/events/gameobject/GameObjectDestroyEvent';
 import { DrawEvent } from '@/events/DrawEvent';
@@ -683,8 +683,8 @@ export class Game {
         }
         return undefined;
     }
-    private constructMouseEvent(): GameMouseEvent {
-        const gameMouseEvent: GameMouseEvent = {
+    private constructMouseEvent(): MouseEvent {
+        const gameMouseEvent: MouseEvent = {
             game: this,
             mousePos: this.input.mouseWorldPosition,
             mousePrecisePos: this.input.mousePreciseWorldPosition,
@@ -698,11 +698,19 @@ export class Game {
         };
         return gameMouseEvent;
     }
-    private mouseMoveHandler(game: Game, event: MouseEvent) {
+    /**
+     * Mouse move event handler.
+     * Connected to DOM mousemove event.
+     * Updates mouse position and emits `mouseMove` event with {@link MouseEvent}.
+     */
+    private mouseMoveHandler(game: Game, event: globalThis.MouseEvent) {
+        // Update input mouse position
         game.input.mouseClientPosition = new Vector2(
             event.offsetX,
             event.offsetY,
         );
+
+        // TODO: organize calculations.
         const worldPosition = game.input.mouseClientPosition.clone();
         const gridSize = game.renderer.gridSize;
         worldPosition.divide(gridSize);
@@ -713,11 +721,13 @@ export class Game {
         game.input.mousePreciseWorldPosition = worldPosition.clone();
         worldPosition.floor();
         game.input.mouseWorldPosition = worldPosition;
+        
+        // Emit event
         const mouseEvent = game.constructMouseEvent();
         game.emit('mouseMove', mouseEvent);
     }
     private mouseDownHandler(game: Game) {
-        const gameMouseEvent: GameMouseEvent = game.constructMouseEvent();
+        const gameMouseEvent: MouseEvent = game.constructMouseEvent();
         game.input.isMousePrimaryButtonDown = true;
         const hoveredGameObject = this.mouseHoveredGameObject;
         if (hoveredGameObject !== undefined)
@@ -725,7 +735,7 @@ export class Game {
         game.emit('mouseDown', gameMouseEvent);
     }
     private mouseUpHandler(game: Game) {
-        const gameMouseEvent: GameMouseEvent = game.constructMouseEvent();
+        const gameMouseEvent: MouseEvent = game.constructMouseEvent();
         game.input.isMousePrimaryButtonDown = false;
         const hoveredGameObject = this.mouseHoveredGameObject;
         if (hoveredGameObject !== undefined)
@@ -733,7 +743,7 @@ export class Game {
         game.emit('mouseUp', gameMouseEvent);
     }
     private mouseClickHandler(game: Game) {
-        const gameMouseEvent: GameMouseEvent = game.constructMouseEvent();
+        const gameMouseEvent: MouseEvent = game.constructMouseEvent();
         const hoveredGameObject = this.mouseHoveredGameObject;
         if (hoveredGameObject !== undefined)
             hoveredGameObject.OnMouseClick(gameMouseEvent);
