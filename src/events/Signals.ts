@@ -1,4 +1,4 @@
-import GameEvent from '@/events//GameEvent';
+import GameEvent from '@/events/GameEvent';
 import { Listener, ListenerID } from '@/structs/Listener';
 
 export type SignalChannel = string;

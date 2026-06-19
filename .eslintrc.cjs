@@ -34,11 +34,10 @@ module.exports = {
     'no-tabs': 'error',
     'no-template-curly-in-string': 'error',
     'no-throw-literal': 'error',
-    'no-trailing-spaces': 'error',
     'no-undef': ['error', { typeof: true }],
     'no-undef-init': 'error',
     'no-unused-expressions': ['error', { allowShortCircuit: true }],
-    "@typescript-eslint/consistent-type-definitions": ["error", "type"], 
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type'], 
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     'no-use-before-define': ['error', {

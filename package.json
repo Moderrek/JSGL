@@ -41,6 +41,8 @@
     "build:docs": "typedoc src/index.ts --name \"JSGL\" --includeVersion --hideGenerator --logLevel Error",
     "build": "vite build && npm run build:docs",
     "dev": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -55,6 +57,7 @@
     "typedoc": "^0.28.19",
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
-    "vite-plugin-dts": "^5.0.2"
+    "vite-plugin-dts": "^5.0.2",
+    "vitest": "^4.1.9"
   }
 }
