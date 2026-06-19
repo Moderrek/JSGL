@@ -1,23 +1,38 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Transform } from '../structs/Transform';
+import Transform from '@/structs/Transform';
 
-import { GameObjectDestroyEvent } from '../events/gameobject/GameObjectDestroyEvent';
-import { TickEvent } from '../events/TickEvent';
-import { GameObjectSpawnEvent } from '../events/gameobject/GameObjectSpawnEvent';
+import { TickEvent, GameObjectSpawnEvent, GameObjectDestroyEvent } from '@/events';
+
+export type GameObjectId = string;
+
+export function generateId(): GameObjectId {
+    return crypto.getRandomValues(new Uint32Array(4)).join('-');
+}
 
 /**
  * Represents plain GameObject
+ * Which can be extended to create more complex game objects, like {@link Sprite} or {@link Shape}.
+ * It is the base class for all game objects in JSGL, and it is not drawable by itself,
+ * but it can be extended to create drawable game objects, like {@link DrawableGameObject}.
+ * 
+ * @class
  * @group Game Objects
  * @author Tymon Woźniak
- * @class
+ * 
+ * @example
+ * class MyGameObject extends GameObject {
+ *     Start(event: GameObjectSpawnEvent) {
+ *         log('I have been spawned!');
+ *     }
+ * }
  */
 export class GameObject {
     /**
      * The unique id of this game object.
      * @property
      */
-    public readonly id: string;
+    public readonly id: GameObjectId;
     /**
      * Defines is this game object enabled in game.
      * @property
@@ -49,7 +64,7 @@ export class GameObject {
      * @constructor
      */
     public constructor() {
-        this.id = crypto.getRandomValues(new Uint32Array(4)).join('-');
+        this.id = generateId();
         this.enabled = true;
         this.name = undefined;
         this.tag = undefined;
@@ -68,6 +83,7 @@ export class GameObject {
      * }
      */
     public Start(event: GameObjectSpawnEvent) {}
+
     /**
      * Invoked at game object destroy.
      * @method
@@ -79,6 +95,7 @@ export class GameObject {
      * }
      */
     public Destroy(event: GameObjectDestroyEvent) {}
+
     /**
      * Invoked at every frame.
      * @method
@@ -90,15 +107,18 @@ export class GameObject {
      * }
      */
     public Update(event: TickEvent) {}
+
     /**
      * Invoked at last update in every frame.
      * @method
      * @param event - {@link TickEvent}
      * @virtual
      * @example
-     * Update(event){
+     * FixedUpdate(event){
      *  this.transform.translate(new JSGL.Vector2(1, 0).multiply(event.deltaTime));
      * }
      */
     public FixedUpdate(event: TickEvent) {}
 }
+
+export default GameObject;

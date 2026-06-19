@@ -1,11 +1,21 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MouseEvent } from '../events/input/MouseEvent';
-import { DrawableGameObject } from './DrawableGameObject';
+import DrawableGameObject from '@/gameobjects/DrawableGameObject';
+
+import type MouseEvent from '@/events/input/MouseEvent';
 
 /**
  * Represents clickable and drawable game object
+ * 
+ * @class
  * @group Game Objects
+ * @author Tymon Woźniak
+ * @example
+ * class MyClickableGameObject extends ClickableGameObject {
+ *     OnMouseClick(event: MouseEvent) {
+ *         log('Clicked!');
+ *     }
+ * }
  */
 export class ClickableGameObject extends DrawableGameObject {
     /**
@@ -39,3 +49,5 @@ export class ClickableGameObject extends DrawableGameObject {
      */
     public OnMouseHoverEnd(event: MouseEvent) {}
 }
+
+export default ClickableGameObject;

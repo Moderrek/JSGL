@@ -1,34 +1,38 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DrawEvent } from '../events/DrawEvent';
-import { IsInRange } from '../utils/math/MathUtils';
-import { GameObject } from './GameObject';
+import GameObject from '@/gameobjects/GameObject';
+import DrawEvent from '@/events/DrawEvent';
+import { IsInRange } from '@/utils/math/MathUtils';
 
 /**
- * Represents drawable game object
+ * Drawable game object, which can be drawn on canvas and can interact with other drawables.
+ * It is the base class for all game objects which can be drawn on canvas, like {@link Sprite} or {@link Shape}.
+ * 
+ * @class
  * @group Game Objects
+ * @author Tymon Woźniak
+ * 
+ * @example
+ * class MyDrawableGameObject extends DrawableGameObject {
+ *     OnDraw(event: DrawEvent) {
+ *        event.renderer.drawRectangle(0, 0, 1, 1);
+ *     }
+ * }
  */
 export class DrawableGameObject extends GameObject {
-    public static IsTouching(
-        gameObject: DrawableGameObject,
-        anotherGameObject: DrawableGameObject,
-    ): boolean {
-        return (
-            gameObject.visible &&
-            anotherGameObject.visible &&
+    public static IsTouching(o1: DrawableGameObject, o2: DrawableGameObject): boolean {
+        if (o1 === o2) return false;
+        if (!o1.visible || !o2.visible) return false;
+
+        return IsInRange(
+                o1.transform.position.x,
+                o2.transform.position.x,
+                o2.transform.position.x + o2.transform.scale.x) &&
             IsInRange(
-                gameObject.transform.position.x,
-                anotherGameObject.transform.position.x,
-                anotherGameObject.transform.position.x +
-                    anotherGameObject.transform.scale.x,
-            ) &&
-            IsInRange(
-                gameObject.transform.position.y,
-                anotherGameObject.transform.position.y,
-                anotherGameObject.transform.position.y +
-                    anotherGameObject.transform.scale.y,
-            )
-        );
+                o1.transform.position.y,
+                o2.transform.position.y,
+                o2.transform.position.y + o2.transform.scale.y,
+            );
     }
 
     /**
@@ -53,3 +57,5 @@ export class DrawableGameObject extends GameObject {
         return DrawableGameObject.IsTouching(this, anotherGameObject);
     }
 }
+
+export default DrawableGameObject;

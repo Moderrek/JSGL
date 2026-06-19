@@ -1,12 +1,16 @@
-import { ClickableGameObject } from './ClickableGameObject';
+import ClickableGameObject from '@/gameobjects/ClickableGameObject';
+import RotationStyle from '@/enums/RotationStyle';
 
-import { DrawEvent } from '../events/DrawEvent';
-import { GameObjectSpawnEvent } from '../events/gameobject/GameObjectSpawnEvent';
-import { RotationStyle } from '../enums/RotationStyle';
+import type DrawEvent from '@/events/DrawEvent';
+import type GameObjectSpawnEvent from '@/events/gameobject/GameObjectSpawnEvent';
 
 /**
  * Represents sprite game object
+ * 
+ * @class
  * @group Game Objects
+ * @author Tymon Woźniak
+ * 
  */
 export class Sprite extends ClickableGameObject {
     /**
@@ -38,3 +42,5 @@ export class Sprite extends ClickableGameObject {
         }
     }
 }
+
+export default Sprite;

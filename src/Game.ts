@@ -1,9 +1,9 @@
-import { Vector2 } from '@/structs/Vector2';
-import { Signals } from '@/events/Signals';
-import { GameEvent } from '@/events/GameEvent';
+import Vector2 from '@/structs/Vector2';
+import Signals from '@/events/Signals';
+import GameEvent from '@/events/GameEvent';
 import { Resource, ResourceType } from '@/structs/Resource';
-import { Renderer } from '@/drawing/Renderer';
-import { GameObject } from '@/gameobjects/GameObject';
+import Renderer from '@/drawing/Renderer';
+import GameObject from '@/gameobjects/GameObject';
 import { MouseEvent } from '@/events/input/MouseEvent';
 import { GameObjectSpawnEvent } from '@/events/gameobject/GameObjectSpawnEvent';
 import { GameObjectDestroyEvent } from '@/events/gameobject/GameObjectDestroyEvent';

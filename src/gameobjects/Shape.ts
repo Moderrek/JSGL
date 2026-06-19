@@ -1,7 +1,9 @@
-import { defaultDrawSettings, DrawSettings } from '../structs/DrawSettings';
-import { ShapeType } from '../enums/ShapeType';
-import { DrawEvent } from '../events/DrawEvent';
-import { ClickableGameObject } from './ClickableGameObject';
+import ClickableGameObject from '@/gameobjects/ClickableGameObject';
+
+import { DrawSettings, defaultDrawSettings } from '@/structs/DrawSettings';
+import ShapeType from '@/enums/ShapeType';
+
+import type DrawEvent from '@/events/DrawEvent';
 
 /**
  * Represents drawable, clickable shape on canvas
@@ -30,3 +32,5 @@ export class Shape extends ClickableGameObject {
         }
     }
 }
+
+export default Shape;
