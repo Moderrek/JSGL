@@ -1,20 +1,23 @@
-import Vector2 from '@/structs/Vector2';
-import Signals from '@/events/Signals';
-import GameEvent from '@/events/GameEvent';
-import { Resource, ResourceType } from '@/structs/Resource';
+import Input from '@/Input';
+import Signals, { type SignalChannel } from '@/events/Signals';
 import Renderer from '@/drawing/Renderer';
-import GameObject from '@/gameobjects/GameObject';
-import { MouseEvent } from '@/events/input/MouseEvent';
-import { GameObjectSpawnEvent } from '@/events/gameobject/GameObjectSpawnEvent';
-import { GameObjectDestroyEvent } from '@/events/gameobject/GameObjectDestroyEvent';
-import { DrawEvent } from '@/events/DrawEvent';
-import { TickEvent } from '@/events/TickEvent';
-import { ClickableGameObject } from '@/gameobjects/ClickableGameObject';
-import { DrawableGameObject } from '@/gameobjects/DrawableGameObject';
-import { IsInRange, RandomInRange, floor } from '@/utils/math/MathUtils';
-import { GameStartEvent } from '@/events/GameStartEvent';
+import { Resource, ResourceType } from '@/structs/Resource';
 import { GameSettings, defaultGameSettings } from '@/structs/GameSettings';
-import { Input } from '@/Input';
+import Vector2 from '@/structs/Vector2';
+
+import GameObject from '@/gameobjects/GameObject';
+import ClickableGameObject from '@/gameobjects/ClickableGameObject';
+import DrawableGameObject from '@/gameobjects/DrawableGameObject';
+
+import GameEvent from '@/events/GameEvent';
+import MouseEvent from '@/events/input/MouseEvent';
+import GameObjectSpawnEvent from '@/events/gameobject/GameObjectSpawnEvent';
+import GameObjectDestroyEvent from '@/events/gameobject/GameObjectDestroyEvent';
+import DrawEvent from '@/events/DrawEvent';
+import TickEvent from '@/events/TickEvent';
+import GameStartEvent from '@/events/GameStartEvent';
+
+import { IsInRange, RandomInRange, floor } from '@/utils/math/MathUtils';
 
 /**
  * @group Important Classes
@@ -33,25 +36,34 @@ export class Game {
      * @param gameSettings The settings
      */
     constructor(gameSettings: GameSettings) {
+        // Combine default settings with given settings
         this.gameSettings = { ...defaultGameSettings, ...gameSettings };
+
+        // Check is canvas exists and assign canvas and grid
         if (this.gameSettings.canvas !== undefined) {
             this.canvas = this.gameSettings.canvas;
         } else {
-            throw new Error('Cannot asign canvas.');
+            throw new Error('Cannot assign canvas.');
         }
+
         if (this.gameSettings.grid !== undefined) {
             this.grid = this.gameSettings.grid;
         } else {
-            throw new Error('Cannot asign grid.');
+            throw new Error('Cannot assign grid.');
         }
+
+        // Initialize input and register canvas events
         this.input = new Input();
         this._registerCanvasEvents();
+
         if (this.gameSettings.autoResize) {
             window.addEventListener('resize', () => {
                 this.renderer.resizeCanvas();
                 this.Update();
             });
         }
+
+        // Initialize canvas view offset and set image smoothing settings
         this.renderer.ctx.imageSmoothingEnabled = true;
         if (this.gameSettings.canvasImageQuality !== undefined)
             this.renderer.ctx.imageSmoothingQuality =
@@ -70,6 +82,7 @@ export class Game {
         this.renderer.resizeCanvas();
         return this.renderer.canvasSize;
     }
+
     private _registerCanvasEvents() {
         this.canvas.addEventListener('mousemove', event => {
             this.mouseMoveHandler(this, event);
@@ -84,26 +97,21 @@ export class Game {
             this.mouseClickHandler(this);
         });
         // Appends mouse wheel listener to canvas
-        this.canvas.addEventListener(
-            'wheel',
-            event => {
+        this.canvas.addEventListener('wheel', event => {
                 this.mouseWheelHandler(this, event);
-            },
-            { passive: false },
-        );
+        }, { passive: false });
+
         document.addEventListener('keydown', event => {
-            if (event.defaultPrevented) {
-                return;
-            }
+            if (event.defaultPrevented) return;
             event.preventDefault();
+            // TODO: create function to convert event.code to key name
             const code = event.code.toLowerCase().replace('key', '');
             this.input.keysDown.add(code);
-        });
+        }); 
         document.addEventListener('keyup', event => {
-            if (event.defaultPrevented) {
-                return;
-            }
+            if (event.defaultPrevented) return;
             event.preventDefault();
+            // TODO: create function to convert event.code to key name
             const code = event.code.toLowerCase().replace('key', '');
             this.input.keysUp.add(code);
         });
@@ -117,9 +125,12 @@ export class Game {
     isNeedToUpdate = true;
 
     private _gameLoopUpdate(time: number) {
+        // NOTE: time is in milliseconds
+
         // Calculation deltaTime
         this._deltaTime = time - this._unscaledTime;
         this._unscaledTime = time;
+
         // Update
         const tickEvent: TickEvent = {
             unscaledDeltaTime: this._deltaTime / 1000,
@@ -128,6 +139,7 @@ export class Game {
             timeScale: this.timeScale,
             game: this,
         };
+
         // Events update
         const hoveredGameObject = this.mouseHoveredGameObject;
         const mouseEvent = this.constructMouseEvent();
@@ -305,8 +317,9 @@ export class Game {
 
     // Signals
     private readonly _signals: Signals = new Signals();
-    emit = (channel: string, event: GameEvent) =>
-        this._signals.emit(channel, event);
+
+    emit = (channel: SignalChannel, event: GameEvent) => this._signals.emit(channel, event);
+    
     /**
      * Appends listener to event channel.
      * @method
@@ -315,8 +328,7 @@ export class Game {
      * @example
      * game.on('channel', () => { console.log('received!') });
      */
-    on = (channel: string, callback: (event: GameEvent) => void) =>
-        this._signals.on(channel, callback);
+    on = (channel: SignalChannel, callback: (event: GameEvent) => void) => this._signals.on(channel, callback);
 
     // Resources
     resources: Map<string, Resource> = new Map();

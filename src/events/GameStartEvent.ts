@@ -6,3 +6,5 @@ import GameEvent from '@/events/GameEvent';
  * @group Game Events
  */
 export type GameStartEvent = GameEvent;
+
+export default GameStartEvent;
